@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}"></title>
+    <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/styles/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/styles/styles.css}" type="text/css"/>
+</head>
+
+<body>
+
+<header th:fragment="header"
+        class="bg-dark-subtle  ">
+    <nav class="d-flex justify-content-between">
+        <ul class="nav nav-underline mx-4 align-items-center ">
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="index.html"
+                   th:href="@{/}">
+                    <img src="/src/main/resources/static/images/logo_min.png"
+                         th:src="@{/images/logo_min.png}"
+                         alt="logo" id="logo"/></a>
+            </li>
+            <li class="nav-item">
+                <a href="#"
+                   th:href="@{/}"
+                   class="nav-link ">Přehled klientů</a>
+            </li>
+            <li class="nav-item">
+                <a href="#"
+                   th:href="@{/}"class="nav-link ">Můj přehled</a>
+            </li>
+            <li class="nav-item">
+                <a href="#"
+                   th:href="@{/about}"class="nav-link ">O aplikaci</a>
+            </li>
+        </ul>
+
+
+        <ul class="nav nav-underline mx-4 align-items-center ">
+            <li class="nav-item">
+                <a href="#"
+                   th:href="@{/login}"
+                   class="nav-link ">Přihlášení</a>
+            </li>
+            <li class="nav-item">
+                <a href="#"
+                   th:href="@{/register/stepOne}"
+                   class="nav-link ">Registrace</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link ">Odhlásit se</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<footer th:fragment="footer"
+        class=" bg-dark-subtle d-flex justify-content-center align-items-center fixed-bottom ">
+    <p>Vytvořil: Lukáš Raška, 2024</p>
+</footer>
+
+</body>
+</html>

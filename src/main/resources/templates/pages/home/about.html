@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout.html :: head('O aplikaci')}">
+    <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+</head>
+
+<body>
+
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+
+<article class="text-center">
+    <header class="my-5">
+        <h1>O aplikaci</h1>
+    </header>
+    <section>
+        <p>Zde bude popsáno, co všechno aplikace umí a jaké nástroje byly při její tvorbě použity.</p>
+    </section>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+
+</body>
+
+</html>

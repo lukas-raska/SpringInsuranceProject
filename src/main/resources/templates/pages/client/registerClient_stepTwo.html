@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout.html :: head('Registrace (2/2)')}">
+    <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+
+<body>
+
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article class="d-flex justify-content-center mb-5">
+    <div>
+        <header class=" mt-5 mb-3 text-center ">
+            <h1>Registrace nového klienta 2/2</h1>
+            <h6>(zadejte svou adresu)</h6>
+        </header>
+
+        <section>
+            <form class=" border bg-dark-subtle"
+            th:action="@{/client/register/stepTwo}"
+            th:object="${clientEditDTO}"
+            method="post">
+
+                <div class="m-3">
+                    <label for="street" class="form-label">Ulice a číslo popisné</label>
+                    <input th:field="*{street}" type="text" class="form-control" name="street" id="street"/>
+                    <small th:errors="*{street}" class="form-text text-danger ">validace</small>
+                </div>
+                <div class="m-3">
+                    <label for="city" class="form-label">Město</label>
+                    <input type="text" class="form-control" name="city" id="city"/>
+                    <small th:errors="${city}" class="form-text text-danger "></small>
+                </div>
+                <div class="m-3">
+                    <label for="zipCode" class="form-label">PSČ</label>
+                    <input type="text" class="form-control" name="zipCode" id="zipCode"/>
+                    <small th:errors="${zipCode}" class="form-text text-danger ">validace</small>
+                </div>
+                
+                <div class="m-3 text-center ">
+                    <button type="submit" class="btn btn-outline-dark      ">
+                        Pokračovat
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+
+</body>
+</html>
