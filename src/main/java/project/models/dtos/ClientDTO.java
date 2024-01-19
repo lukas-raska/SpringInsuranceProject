@@ -4,22 +4,37 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
 import java.time.LocalDate;
 
 @Data
-public class ClientEditDTO {
+public class ClientDTO {
 
     private long id;
 
+    @NotBlank(message = "Vyplňte křestní jméno")
     private String firstName;
 
+    @NotBlank(message = "Vyplňte příjmení")
     private String lastName;
 
+    @NotBlank(message = "Vyplňte e-mail")
+    @Email(message = "Vyplňte validní e-mail")
     private String email;
 
-    @NotBlank(message = "Vyplňte ulici a číslo popisné")
+    @NotBlank(message = "Vyplňte heslo")
+    @Size(min = 6, message = "Minimální délka hesla je 6 znaků")
+    private String password;
+
+    @NotBlank(message = "Vyplňte heslo")
+    @Size(min = 6, message = "Minimální délka hesla je 6 znaků")
+    private String confirmPassword;
+
+
+    @NotBlank(message = "Vyplňte ulici")
     private String street;
+
+    @NotBlank(message = "Vyplňte číslo domu")
+    private String streetNumber;
 
     @NotBlank(message = "Vyplňte město")
     private String city;
@@ -35,7 +50,6 @@ public class ClientEditDTO {
     @PastOrPresent(message = "Pokud nejsi cestovatel v čase, datum narození musí být v minulosti :-)")
     private LocalDate dateOfBirth;
 
-    }
 
 
-
+}

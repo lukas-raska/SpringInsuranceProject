@@ -35,6 +35,8 @@ public class ClientEntity implements UserDetails {
 
     private String street;
 
+    private String streetNumber;
+
     private String city;
 
     private String zipCode;

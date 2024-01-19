@@ -1,15 +1,14 @@
 package project.models.services;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import project.models.dtos.ClientEditDTO;
-import project.models.dtos.ClientRegistrationDTO;
+import project.models.dtos.ClientDTO;
 
 public interface ClientService extends UserDetailsService {
 
-    ClientEditDTO createNewClient(ClientRegistrationDTO dto);
+    void createNewClient(ClientDTO dto);
 
 
-    void editClient (ClientEditDTO clientEditDTO);
+    void editClient (ClientDTO dto);
 
 
 }

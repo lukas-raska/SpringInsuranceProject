@@ -1,14 +1,14 @@
 package project.models.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.data.entities.ClientEntity;
 import project.data.repositories.ClientRepository;
-import project.models.dtos.ClientEditDTO;
-import project.models.dtos.ClientRegistrationDTO;
+import project.models.dtos.ClientDTO;
 import project.models.dtos.mappers.ClientMapper;
 import project.models.exceptions.ClientNotFoundException;
 import project.models.exceptions.DuplicateEmailException;
@@ -27,28 +27,27 @@ public class ClientServiceImpl implements ClientService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public ClientEditDTO createNewClient(ClientRegistrationDTO dto) {
+    public void createNewClient(ClientDTO dto) {
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
             throw new PasswordDoNotEqualException();
-        }
-        if (clientRepository.existsByEmail(dto.getEmail())) {
-            throw new DuplicateEmailException();
         }
         ClientEntity newClient = new ClientEntity();
         newClient = clientMapper.dtoToEntity(dto);
         newClient.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-        ClientEntity savedClient = clientRepository.save(newClient);
-
-        return clientMapper.entityToDTO(savedClient);
+        try {
+            clientRepository.save(newClient);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateEmailException();
+        }
     }
 
     @Override
-    public void editClient(ClientEditDTO clientEditDTO) {
+    public void editClient(ClientDTO dto) {
         ClientEntity fetchedClient = clientRepository
-                .findById(clientEditDTO.getId())
+                .findById(dto.getId())
                 .orElseThrow(ClientNotFoundException::new);
-        clientMapper.updateClientEntity(clientEditDTO, fetchedClient);
+        clientMapper.updateClientEntity(dto, fetchedClient);
         clientRepository.save(fetchedClient);
     }
 
