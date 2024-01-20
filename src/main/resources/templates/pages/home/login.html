@@ -2,41 +2,48 @@
 <html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/layout.html :: head('Přihlášení')}">
-    
+
+    <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
 <body>
 
 <header th:replace="~{fragments/layout.html :: header}"></header>
-    
-    <article class="d-flex justify-content-center ">
-        <div>
-            <header class="mt-5 mb-3 text-center ">
-                <h1>Přihlášení</h1>
-            </header>
 
-            <section>
-                <form class="border bg-dark-subtle ">
-                    <div class="m-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" id="email" />
-                        <small class="form-text text-danger ">validace</small>
-                    </div>
-                    <div class="m-3">
-                        <label for="password" class="form-label">Heslo</label>
-                        <input type="password" class="form-control" name="password" id="password" />
-                        <small class="form-text text-danger ">validace</small>
-                    </div>
-                    <div class="m-3 text-center ">
-                        <button type="submit" class="btn btn-outline-dark      " >
-                            Přihlásit se
-                        </button>
-                    </div>
+<div th:if="${success}" th:text="${success}" class=" text-center bg-success text-white "></div>
+<div th:if="${param.error}" class="text-center bg-danger text-white">Neplatný email nebo heslo</div>
 
-                </form>
+<article class="d-flex justify-content-center ">
+    <div>
+        <header class="mt-5 mb-3 text-center ">
+            <h1>Přihlášení</h1>
+        </header>
 
-            </section>
-        </div>
 
-    </article>
+
+        <section>
+            <form class="border bg-dark-subtle "
+                  th:action="@{/login}"
+                  method="post">
+                <div class="m-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" id="email"/>
+                </div>
+                <div class="m-3">
+                    <label for="password" class="form-label">Heslo</label>
+                    <input type="password" class="form-control" name="password" id="password"/>
+                </div>
+                <div class="m-3 text-center ">
+                    <button type="submit" class="btn btn-outline-dark      ">
+                        Přihlásit se
+                    </button>
+                </div>
+
+            </form>
+
+        </section>
+    </div>
+
+</article>
 
 <footer th:replace="~{fragments/layout.html :: footer}"></footer>
 

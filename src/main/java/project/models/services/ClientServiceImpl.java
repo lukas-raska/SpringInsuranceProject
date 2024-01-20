@@ -24,6 +24,9 @@ public class ClientServiceImpl implements ClientService {
     private ClientMapper clientMapper;
 
     @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -56,6 +59,14 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository
                 .findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found"));
+    }
+
+    @Override
+    public ClientDTO getClientById(long id) {
+        ClientEntity fetchedClient = clientRepository
+                .findById(id)
+                .orElseThrow(ClientNotFoundException::new);
+        return clientMapper.entityToDTO(fetchedClient);
     }
 
 

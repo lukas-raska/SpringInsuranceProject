@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/layout.html :: head('Registrace')}">
+<head th:replace="~{fragments/layout.html :: head('Registrace')}"></head>
     <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
 
@@ -15,7 +15,7 @@
             <h1>Registrace nového klienta</h1>
         </header>
 
-        <div th:if="${error}" th:text="${error}" class="row "></div>
+
 
 
         <section class="row">

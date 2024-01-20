@@ -32,16 +32,19 @@
             </li>
             <li class="nav-item">
                 <a href="#"
-                   th:href="@{/}"class="nav-link ">Můj přehled</a>
+                   th:href="@{/client/detail}" class="nav-link ">Můj přehled</a>
             </li>
             <li class="nav-item">
                 <a href="#"
-                   th:href="@{/about}"class="nav-link ">O aplikaci</a>
+                   th:href="@{/about}" class="nav-link ">O aplikaci</a>
             </li>
         </ul>
 
 
         <ul class="nav nav-underline mx-4 align-items-center ">
+            <li class="nav-item"
+                th:text="${loggedInUser}">
+            </li>
             <li class="nav-item">
                 <a href="#"
                    th:href="@{/login}"
@@ -53,7 +56,14 @@
                    class="nav-link ">Registrace</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link ">Odhlásit se</a>
+                <form th:action="@{/logout}"
+                      method="post">
+                    <button type="submit"
+                            class="nav-link">
+                        Odhlásit se
+                    </button>
+                </form>
+
             </li>
         </ul>
     </nav>

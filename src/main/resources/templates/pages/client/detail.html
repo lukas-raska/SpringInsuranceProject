@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+
+<head       th:replace="~{fragments/layout.html :: head('Můj přehled: ' + ${clientDTO.firstName} + ' ' + ${clientDTO.lastName})}"></head>
+<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+
+<body>
+
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article class="container ">
+    <header>
+        <h1 class="text-center my-3">Můj přehled</h1>
+    </header>
+
+    <!--Start sekce - osobní údaje-->
+    <section class="container bg-dark-subtle"
+             th:object="${clientDTO}">
+        <div class="row  ">
+            <div class="mx-5 my-3">
+                <h3 class="col-12">
+                    <span th:text="*{firstName}"> </span>
+                    <span th:text="*{lastName}"></span>
+                </h3>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="ms-5">
+                    <p>
+                        <span th:text="*{street}"> </span>
+                        <span th:text="*{streetNumber}"></span>
+                    </p>
+                    <p th:text="*{zipCode}"></p>
+                    <p th:text="*{street}"></p>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="ms-5">
+                    <p th:text="*{phoneNumber}"></p>
+                    <p th:text="*{email}"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--konec sekce - osobní údaje-->
+
+    <p class="my-5"></p>
+
+    <!--start sekce -  pojištění-->
+    <section>
+        <header>
+            <h2>Sjednaná pojištění</h2>
+        </header>
+        <table class="table table-hover   ">
+            <thead>
+            <tr>
+                <th>Pojištění</th>
+                <th>Částka</th>
+                <th>Datum</th>
+            </tr>
+            </thead>
+            <tbody>
+            <a href="#">
+                <tr onclick="window.location.href='#'">
+                    <td>Pojištění majetku</td>
+                    <td class="">1000000</td>
+                    <td>1.1.24</td>
+                </tr>
+            </a>
+            </tbody>
+        </table>
+    </section>
+    <!--konec sekce -  pojištění-->
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+
+</body>
+
+</html>

@@ -9,7 +9,5 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
 
     Optional<ClientEntity> findByEmail(String username);
 
-    default boolean existsByEmail(String email) {
-        return false;
-    }
+
 }
