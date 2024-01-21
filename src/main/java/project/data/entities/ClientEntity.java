@@ -12,6 +12,9 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Entitní třída reprezentující klienta
+ */
 @Entity(name = "client")
 @Getter
 @Setter
@@ -48,37 +51,59 @@ public class ClientEntity implements UserDetails {
 
 
     //UserDetails methods - START
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_CLIENT");
         return List.of(grantedAuthority);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsername() {
         return this.email;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPassword() {
         return this.password;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEnabled() {
         return true;

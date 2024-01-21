@@ -16,21 +16,30 @@ import project.data.entities.ClientEntity;
 
 import java.security.Principal;
 
+/**
+ * Konfigurační třída pro nastavení požadovaných bezpečnostních pravidel
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class AppSecurityConfig {
 
-
+    /**
+     * Slouží k nastavení pravidel autentizace (přístupy na url, login, logout)
+     * @param httpSecurity
+     * @return securityFilterChain
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-
+        //pravidla pro přístup na jednotlivé url
         httpSecurity
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest()
-                        .permitAll());
+                        .permitAll()); //povoleno vše, pravidla přístupu budou ošetřena v kontrolerech pomocí "@Secured"
 
+        //nastavení pro login
         httpSecurity
                 .formLogin(login -> login
                         .loginPage("/login")
@@ -40,6 +49,7 @@ public class AppSecurityConfig {
                         .permitAll()
                 );
 
+        //nastavení pro logout
         httpSecurity
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -53,6 +63,10 @@ public class AppSecurityConfig {
         return httpSecurity.build();
     }
 
+    /**
+     * Slouží pro hashování hesla
+     * @return Vrací instanci BCCryptPasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

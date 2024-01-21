@@ -14,6 +14,9 @@ import project.models.exceptions.ClientNotFoundException;
 import project.models.exceptions.DuplicateEmailException;
 import project.models.exceptions.PasswordDoNotEqualException;
 
+/**
+ * Implementace rozhraní {@link ClientService} pro manipulaci s klienty
+ */
 @Service
 public class ClientServiceImpl implements ClientService {
 
@@ -29,15 +32,26 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Vytvoří nové klienta
+     *
+     * @param dto {@link ClientDTO}
+     * @throw  {@link PasswordDoNotEqualException}
+     * @throw  {@link DuplicateEmailException}
+     */
     @Override
     public void createNewClient(ClientDTO dto) {
+        //vyvolání výjimky při chybně zadaném heslu
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
             throw new PasswordDoNotEqualException();
         }
+
+        //vyrvoření nové entity
         ClientEntity newClient = new ClientEntity();
         newClient = clientMapper.dtoToEntity(dto);
-        newClient.setPassword(passwordEncoder.encode(dto.getPassword()));
+        newClient.setPassword(passwordEncoder.encode(dto.getPassword())); //heslo neukládám přes mapper, ale ručně (hashování)
 
+        //pokud o uložení (výjimka v případě duplicitního emailu)
         try {
             clientRepository.save(newClient);
         } catch (DataIntegrityViolationException e) {
@@ -45,6 +59,11 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
+    /**
+     * Upraví informace o klientovi na základě předaných informací
+     * @param dto {@link ClientDTO} Nové informace o klientovi
+     * @throws ClientNotFoundException Pokud klient není nalezen
+     */
     @Override
     public void editClient(ClientDTO dto) {
         ClientEntity fetchedClient = clientRepository
@@ -54,6 +73,13 @@ public class ClientServiceImpl implements ClientService {
         clientRepository.save(fetchedClient);
     }
 
+    /**
+     * Slouží pro načtení informací o klientovi dle definovaného username (emailu)
+     * Metoda předepsaná {@link org.springframework.security.core.userdetails.UserDetailsService}
+     * @param username (email klienta)
+     * @return Informace o klientovi ve formátu {@link UserDetails}
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return clientRepository
@@ -61,6 +87,12 @@ public class ClientServiceImpl implements ClientService {
                 .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found"));
     }
 
+    /**
+     * Získá informace o klientovi dle jeho identifikátoru
+     * @param id Identifikátor klienta
+     * @return Informace o klientovi ve formátu {@link ClientDTO}
+     * @throws ClientNotFoundException Výjimka vyvolaná v případě nenalezení klienta
+     */
     @Override
     public ClientDTO getClientById(long id) {
         ClientEntity fetchedClient = clientRepository

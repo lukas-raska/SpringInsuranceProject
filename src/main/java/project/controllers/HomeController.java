@@ -7,24 +7,40 @@ import org.springframework.web.bind.annotation.GetMapping;
 import project.models.dtos.ClientDTO;
 import project.models.services.ClientService;
 
+/**
+ * Controller pro základní navigaci
+ */
 @Controller
 public class HomeController {
 
     @Autowired
     private ClientService clientService;
 
+    /**
+     * Zobrazí úvodní stránku
+     *
+     * @return Název šablony pro zobrazení úvodní stránky
+     */
     @GetMapping
-    public String renderIndex(Model model){
-                return "pages/home/index";
+    public String renderIndex() {
+        return "pages/home/index";
     }
 
-    @GetMapping({"/about", "/about/"})
-    public String renderAbout(){
+    /**
+     * Zobrazí sekci "o aplikaci"
+     * @return Název šablony pro zobrazení sekce "o aplikaci"
+     */
+    @GetMapping("/about")
+    public String renderAbout() {
         return "pages/home/about";
     }
 
+    /**
+     * Zobrazí formulář pro login
+     * @return Název šablony s login formulářem
+     */
     @GetMapping("/login")
-    public String renderLogin(){
+    public String renderLogin() {
         return "pages/home/login";
     }
 }

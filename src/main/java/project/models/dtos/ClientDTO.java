@@ -6,6 +6,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
+/**
+ * Data Transfer Object (DTO) pro přenos dat týkajících se klienta
+ */
 @Data
 public class ClientDTO {
 

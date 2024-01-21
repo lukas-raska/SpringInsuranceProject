@@ -2,7 +2,9 @@ package project.data.entities;
 
 import jakarta.persistence.*;
 
-
+/**
+ * Entitní třída reprezentující zaměstnance
+ */
 @Entity(name = "employee")
 public class EmployeeEntity {
 
