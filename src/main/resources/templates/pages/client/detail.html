@@ -10,12 +10,9 @@
 <header th:replace="~{fragments/layout.html :: header}"></header>
 
 <article class="container ">
-    <header>
-        <h1 class="text-center my-3">Můj přehled</h1>
-    </header>
 
     <!--Start sekce - osobní údaje-->
-    <section class="container bg-dark-subtle"
+    <section class="container bg-dark-subtle mt-4"
              th:object="${clientDTO}">
         <div class="row  ">
             <div class="mx-5 my-3">
@@ -48,6 +45,20 @@
     </section>
     <!--konec sekce - osobní údaje-->
 
+    <div class="container border my-2">
+        <div class="row d-flex justify-content-between  ">
+            <div class="col-sm text-center">
+              <a class="btn btn-outline-info col  m-2">Změnit osobní údaje</a>  
+            </div>
+            <div class="col-sm text-center ">
+              <a class="btn btn-outline-danger  m-2 ">Smazat účet</a>  
+            </div>
+            <div class="col-sm text-center">
+                <a class="btn btn-outline-danger  m-2     ">Změnit heslo</a>  
+              </div>
+        </div>
+    </div>
+
     <p class="my-5"></p>
 
     <!--start sekce -  pojištění-->
@@ -64,8 +75,8 @@
             </tr>
             </thead>
             <tbody>
-            <a href="#">
-                <tr onclick="window.location.href='#'">
+            <a href="/src/main/resources/templates/pages/home/about.html">
+                <tr onclick="window.location.href='/src/main/resources/templates/pages/home/about.html'">
                     <td>Pojištění majetku</td>
                     <td class="">1000000</td>
                     <td>1.1.24</td>

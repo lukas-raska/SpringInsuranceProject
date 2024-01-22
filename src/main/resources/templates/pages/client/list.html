@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout.html :: head('Seznam klientů')}"></head>
+<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css" />
+
+<body>
+
+    <header th:replace="~{fragments/layout.html :: header}"></header>
+
+    <article class="container ">
+        <header>
+            <h1 class="mt-4">
+                Seznam klientů
+            </h1>
+        </header>
+
+        <section>
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Jméno</th>
+                        <th>Bydliště</th>
+                        <th>Věk</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="client : ${allClientsList}">
+                        <td th:text="${client.firstName} + ' ' + ${client.lastName}">Jan Novák</td>
+                        <td th:text="${client.street} + ' ' + ${client.streetNumber} + ', ' + ${client.city}">Praha</td>
+                        <td th:text="${client.age}">30</td>
+                        <td class="text-end ">
+                            <a th:href="@{'/client/' + ${client.id}}" class="btn btn-outline-secondary  ">Detail</a>
+                            <a th:href="@{'/client/edit/' + ${client.id}}" class="btn btn-outline-primary   ">Upravit</a>
+                            <a th:href="@{'/client/delete' + ${client.id}}" class="btn btn-outline-danger">Smazat</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </article>
+    <footer th:replace="~{fragments/layout.html :: footer}"></footer>
+
+</body>
+
+</html>

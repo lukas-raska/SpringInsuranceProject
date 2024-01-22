@@ -45,7 +45,7 @@ public class AppSecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
-                        .defaultSuccessUrl("/client/detail", true)
+                        .defaultSuccessUrl("/client/myDetail", true)
                         .permitAll()
                 );
 

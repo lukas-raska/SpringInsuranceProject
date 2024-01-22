@@ -14,6 +14,12 @@ import project.models.exceptions.ClientNotFoundException;
 import project.models.exceptions.DuplicateEmailException;
 import project.models.exceptions.PasswordDoNotEqualException;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Implementace rozhraní {@link ClientService} pro manipulaci s klienty
  */
@@ -36,8 +42,8 @@ public class ClientServiceImpl implements ClientService {
      * Vytvoří nové klienta
      *
      * @param dto {@link ClientDTO}
-     * @throw  {@link PasswordDoNotEqualException}
-     * @throw  {@link DuplicateEmailException}
+     * @throws PasswordDoNotEqualException
+     * @throws DuplicateEmailException
      */
     @Override
     public void createNewClient(ClientDTO dto) {
@@ -61,6 +67,7 @@ public class ClientServiceImpl implements ClientService {
 
     /**
      * Upraví informace o klientovi na základě předaných informací
+     *
      * @param dto {@link ClientDTO} Nové informace o klientovi
      * @throws ClientNotFoundException Pokud klient není nalezen
      */
@@ -76,6 +83,7 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Slouží pro načtení informací o klientovi dle definovaného username (emailu)
      * Metoda předepsaná {@link org.springframework.security.core.userdetails.UserDetailsService}
+     *
      * @param username (email klienta)
      * @return Informace o klientovi ve formátu {@link UserDetails}
      * @throws UsernameNotFoundException
@@ -89,6 +97,7 @@ public class ClientServiceImpl implements ClientService {
 
     /**
      * Získá informace o klientovi dle jeho identifikátoru
+     *
      * @param id Identifikátor klienta
      * @return Informace o klientovi ve formátu {@link ClientDTO}
      * @throws ClientNotFoundException Výjimka vyvolaná v případě nenalezení klienta
@@ -101,5 +110,29 @@ public class ClientServiceImpl implements ClientService {
         return clientMapper.entityToDTO(fetchedClient);
     }
 
+    /**
+     * Slouží pro získání všech záznamů {@link ClientEntity} z databáze
+     * @return Seznam všech záznamů
+     */
+    @Override
+    public List<ClientDTO> getAllClients() {
+        return clientRepository
+                .findAll()
+                .stream()
+                .map(entity -> clientMapper.entityToDTO(entity))
+                .toList();
 
+    }
+
+    /**
+     * Slouží pro výpočet věku klienta dle data narození
+     * @param dateOfBirth
+     * @return Věk klienta
+     */
+    @Override
+    public int calculateAge(LocalDate dateOfBirth) {
+        return Period
+                .between(dateOfBirth, LocalDate.now())
+                .getYears();
+    }
 }

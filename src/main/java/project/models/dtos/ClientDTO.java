@@ -53,6 +53,6 @@ public class ClientDTO {
     @PastOrPresent(message = "Pokud nejsi cestovatel v čase, datum narození musí být v minulosti :-)")
     private LocalDate dateOfBirth;
 
-
+    private int age;
 
 }

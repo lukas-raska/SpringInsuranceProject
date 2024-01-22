@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import project.models.dtos.ClientDTO;
 
+import java.time.LocalDate;
+import java.util.List;
+
 /**
  * Rozhraní pro službu pracující s klienty
  */
@@ -29,6 +32,19 @@ public interface ClientService extends UserDetailsService {
      * @return {@link ClientDTO}
      */
     ClientDTO getClientById (long id);
+
+    /**
+     * Získá všechny záznamy o klientech
+     * @return záznamy ve formátu {@link ClientDTO}
+     */
+    List<ClientDTO> getAllClients();
+
+    /**
+     * Vypočte věk dle zadaného data narození
+     * @param dateOfBirth Datum narození
+     * @return Věk
+     */
+    int calculateAge (LocalDate dateOfBirth);
 
 
 
