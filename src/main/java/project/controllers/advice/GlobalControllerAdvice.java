@@ -5,9 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.servlet.ModelAndView;
 import project.data.entities.ClientEntity;
-import project.models.dtos.ClientDTO;
+import project.models.dtos.ClientDisplayDTO;
+import project.models.dtos.ClientRegisterDTO;
 import project.models.dtos.mappers.ClientMapper;
 import project.models.services.AuthenticationService;
 
@@ -41,7 +41,7 @@ public class GlobalControllerAdvice {
             //pokud je přihlášen klient
             if (loggedIn.get() instanceof ClientEntity) {
                 //převedu na příslušné DTO
-                ClientDTO loggedInClient = clientMapper.entityToDTO((ClientEntity) loggedIn.get());
+                ClientDisplayDTO loggedInClient = clientMapper.entityToDTO((ClientEntity) loggedIn.get());
                 //upravím text pro předání do šablony
                 text = "Přihlášen klient: " + loggedInClient.getFirstName() + " " + loggedInClient.getLastName();
             }

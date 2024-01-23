@@ -7,10 +7,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 /**
- * Data Transfer Object (DTO) pro přenos dat týkajících se klienta
+ * Data transfer object (DTO) pro přenos dat z editačního formuláře klienta
  */
 @Data
-public class ClientDTO {
+public class ClientEditDTO {
 
     private long id;
 
@@ -19,19 +19,6 @@ public class ClientDTO {
 
     @NotBlank(message = "Vyplňte příjmení")
     private String lastName;
-
-    @NotBlank(message = "Vyplňte e-mail")
-    @Email(message = "Vyplňte validní e-mail")
-    private String email;
-
-    @NotBlank(message = "Vyplňte heslo")
-    @Size(min = 6, message = "Minimální délka hesla je 6 znaků")
-    private String password;
-
-    @NotBlank(message = "Vyplňte heslo")
-    @Size(min = 6, message = "Minimální délka hesla je 6 znaků")
-    private String confirmPassword;
-
 
     @NotBlank(message = "Vyplňte ulici")
     private String street;
@@ -52,7 +39,4 @@ public class ClientDTO {
     @DateTimeFormat(pattern = "dd.DD.yyyy")
     @PastOrPresent(message = "Pokud nejsi cestovatel v čase, datum narození musí být v minulosti :-)")
     private LocalDate dateOfBirth;
-
-    private int age;
-
 }

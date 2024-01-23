@@ -8,7 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.data.entities.ClientEntity;
-import project.models.dtos.ClientDTO;
+import project.models.dtos.ClientDisplayDTO;
+import project.models.dtos.ClientEditDTO;
+import project.models.dtos.ClientRegisterDTO;
 import project.models.dtos.mappers.ClientMapper;
 import project.models.exceptions.DuplicateEmailException;
 import project.models.exceptions.PasswordDoNotEqualException;
@@ -37,11 +39,11 @@ public class ClientController {
     /**
      * Zobrazí formulář pro registraci nového klienta
      *
-     * @param dto (Objekt ClientDTO pro předvyplnění formuláře (pokud existuje)
+     * @param dto (Objekt ClientRegisterDTO pro předvyplnění formuláře (pokud existuje)
      * @return Název šablony pro zobrazení formuláře
      */
     @GetMapping("/register")
-    public String renderRegisterForm(@ModelAttribute ClientDTO dto) {
+    public String renderRegisterForm(@ModelAttribute ClientRegisterDTO dto) {
         return "pages/client/register";
     }
 
@@ -49,7 +51,7 @@ public class ClientController {
     /**
      * Zpracuje požadavek na registraci nového klienta
      *
-     * @param dto                Objekt ClientDTO obsahující informace o klientovi vyplněné ve formuláři
+     * @param dto                Objekt ClientRegisterDTO obsahující informace o klientovi vyplněné ve formuláři
      * @param result             objekt BindingResult pro práci s výsledky validace formuláře
      * @param redirectAttributes Atributy pro přesměrování (slouží pro přidávání flash zpráv)
      * @param model              Model pro předávání dat do šablony
@@ -57,7 +59,7 @@ public class ClientController {
      */
     @PostMapping("/register")
     public String registerNewClient(
-            @Valid @ModelAttribute ClientDTO dto,
+            @Valid @ModelAttribute ClientRegisterDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model model
@@ -98,7 +100,7 @@ public class ClientController {
     @GetMapping("/myDetail")
     public String renderLoggedClientDetail(Model model
     ) {
-        ClientDTO dto = new ClientDTO();
+        ClientDisplayDTO dto = new ClientDisplayDTO();
 
         //získání dat o přihlášeném klientoví a převedení na DTO
         Optional<ClientEntity> client = authenticationService.getLoggedInEntity();
@@ -123,10 +125,7 @@ public class ClientController {
             @PathVariable(name = "clientId") Long clientId,
             Model model
     ) {
-        //načtení z db dle zadaného id
-        ClientDTO dto = clientService.getClientById(clientId);
-        //předání do šablony
-        model.addAttribute("clientDTO", dto);
+        model.addAttribute("clientDTO", clientService.getClientById(clientId));
 
         return "pages/client/detail";
 
@@ -140,33 +139,48 @@ public class ClientController {
      */
     @GetMapping("/list")
     public String renderAllClientsList(Model model) {
-        //načtení všech klientů z databáze
-        List<ClientDTO> allClients = clientService.getAllClients();
-        //nastavení věku dle dat narození
-        allClients.stream()
-                .forEach(client -> client.setAge(clientService.calculateAge(client.getDateOfBirth())));
-        //předání do šablony
-        model.addAttribute("allClientsList", allClients);
-
+        model.addAttribute("allClientsList", clientService.getAllClients());
         return "pages/client/list";
     }
 
     @GetMapping("/edit/{clientId}")
     public String renderEditForm(
-            @ModelAttribute ClientDTO dto
-    ){
+            @PathVariable(name = "clientId") Long clientId,
+            @ModelAttribute ClientEditDTO dto
+    ) {
+        //načtu data klienta k předvyplnění formuláře
+        ClientDisplayDTO fetchedClient = clientService.getClientById(clientId);
+
+        //načtenými daty updatuju dto předávané metodou controlleru
+        clientMapper.updateClientDTO(fetchedClient, dto);
+
         return "pages/client/edit";
     }
 
 
-    @PutMapping("/edit/{clientId")
-    public String editClient (
+    @PutMapping("/edit/{clientId}")
+    public String editClient(
             @PathVariable(name = "clientId") Long clientId,
-            @Valid @ModelAttribute ClientDTO dto,
+            @Valid @ModelAttribute ClientEditDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
-    ){
-        if (authenticationService.isUserLoggedIn()){
+    ) {
+        System.out.println("Metoda editClient spuštěna");
+        //kontrola validace - v případě chyb opětovné vykreslení formuláře + chybových hlášek (viz šablona)
+        if (result.hasErrors()) {
+            System.out.println("Chyby: " + result);
+            return renderEditForm(clientId, dto);
+        }
+        System.out.println("DTO ukládané do db:");
+        System.out.println(dto);
+
+        dto.setId(clientId);
+        clientService.editClient(dto);
+
+        redirectAttributes.addFlashAttribute("success", "Úprava údajů proběhla úspěšně.");
+
+        System.out.println("Přihlášen uživatel?: " + authenticationService.isUserLoggedIn());
+        if (authenticationService.isUserLoggedIn()) {
             return "redirect:/client/myDetail";
         }
         return "redirect:/client/{clientId}";

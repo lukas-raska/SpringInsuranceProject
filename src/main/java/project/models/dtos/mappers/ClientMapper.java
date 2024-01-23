@@ -4,10 +4,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import project.data.entities.ClientEntity;
-import project.models.dtos.ClientDTO;
+import project.models.dtos.ClientDisplayDTO;
+import project.models.dtos.ClientEditDTO;
+import project.models.dtos.ClientRegisterDTO;
 
 /**
- * Rozhraní pro mapování meti objekty {@link ClientDTO} a {@link ClientEntity}
+ * Rozhraní pro mapování meti objekty {@link ClientRegisterDTO} a {@link ClientEntity}
  * Používá knihovnu Mapstruct
  */
 @Mapper(componentModel = "spring")
@@ -15,36 +17,54 @@ public interface ClientMapper {
 
 
     /**
-     * Mapuje objekt {@link ClientDTO} na {@link ClientEntity}
+     * Mapuje objekt {@link ClientRegisterDTO} na {@link ClientEntity}
      *
-     * @param source {@link ClientDTO}
+     * @param source {@link ClientRegisterDTO}
      * @return  {@link ClientEntity}
      */
     @Mapping(target = "password", ignore = true)
-    ClientEntity dtoToEntity(ClientDTO source);
+    ClientEntity dtoToEntity(ClientRegisterDTO source);
+
 
     /**
-     * Mapuje objekt   {@link ClientEntity} na {@link ClientDTO}
+     * Mapuje objekt {@link ClientEditDTO} na {@link ClientEntity}
+     * @param source {@link ClientEditDTO}
+     * @return {@link ClientEntity}
+     */
+    ClientEntity dtoToEntity(ClientEditDTO source);
+
+
+    /**
+     * Mapuje objekt   {@link ClientEntity} na {@link ClientDisplayDTO}
      *
      * @param {@link ClientEntity}
      * @return
      */
-    @Mapping(target = "password", ignore = true)
-    ClientDTO entityToDTO(ClientEntity sourceEntity);
+
+    ClientDisplayDTO entityToDTO(ClientEntity sourceEntity);
 
     /**
-     * Aktualizuje {@link ClientDTO} pomocí hodnot z jiného {@link ClientDTO}
+     * Aktualizuje {@link ClientEditDTO} pomocí hodnot z jiného {@link ClientEditDTO}
      *
-     * @param source {@link ClientDTO}
-     * @param target {@link ClientDTO}
+     * @param source {@link ClientEditDTO}
+     * @param target {@link ClientEditDTO}
      */
-    void updateClientDTO(ClientDTO source, @MappingTarget ClientDTO target);
+    void updateClientDTO(ClientEditDTO source, @MappingTarget ClientEditDTO target);
 
     /**
-     * Aktualizuje {@link ClientEntity} pomocí zdrojového {@link ClientDTO}
+     * Aktualizuje {@link ClientEditDTO} pomocí hodnot z jiného {@link ClientDisplayDTO}
+     *
+     * @param source {@link ClientDisplayDTO}
+     * @param target {@link ClientEditDTO}
+     */
+    void updateClientDTO(ClientDisplayDTO source, @MappingTarget ClientEditDTO target);
+
+
+    /**
+     * Aktualizuje {@link ClientEntity} pomocí zdrojového {@link ClientEditDTO}
      *
      * @param source {@link ClientEntity}
-     * @param target {@link ClientDTO}
+     * @param target {@link ClientEditDTO}
      */
-    void updateClientEntity(ClientDTO source, @MappingTarget ClientEntity target);
+    void updateClientEntity(ClientEditDTO source, @MappingTarget ClientEntity target);
 }

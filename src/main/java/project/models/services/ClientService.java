@@ -1,10 +1,12 @@
 package project.models.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import project.models.dtos.ClientDTO;
+import project.models.dtos.ClientDisplayDTO;
+import project.models.dtos.ClientEditDTO;
+import project.models.dtos.ClientRegisterDTO;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 /**
@@ -15,29 +17,30 @@ public interface ClientService extends UserDetailsService {
 
     /**
      * Vytvoří nového klienta
-     * @param dto {@link ClientDTO}
+     * @param dto {@link ClientRegisterDTO}
      */
-    void createNewClient(ClientDTO dto);
+    void createNewClient(ClientRegisterDTO dto);
 
 
     /**
      * Upraví informace o stávajícím klientovi
-     * @param dto {@link ClientDTO}
+     * @param dto {@link project.models.dtos.ClientEditDTO}
      */
-    void editClient (ClientDTO dto);
+    void editClient (ClientEditDTO dto);
 
     /**
      * Získá informace o klientovi dle jeho identifikátoru
      * @param id Identifikátor klienta
-     * @return {@link ClientDTO}
+     * @return {@link project.models.dtos.ClientDisplayDTO}
      */
-    ClientDTO getClientById (long id);
+    ClientDisplayDTO getClientById (long id);
 
     /**
      * Získá všechny záznamy o klientech
-     * @return záznamy ve formátu {@link ClientDTO}
+     * @return záznamy ve formátu {@link ClientDisplayDTO}
      */
-    List<ClientDTO> getAllClients();
+    List<ClientDisplayDTO> getAllClients();
+
 
     /**
      * Vypočte věk dle zadaného data narození
@@ -45,6 +48,8 @@ public interface ClientService extends UserDetailsService {
      * @return Věk
      */
     int calculateAge (LocalDate dateOfBirth);
+
+
 
 
 

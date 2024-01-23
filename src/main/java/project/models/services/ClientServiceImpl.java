@@ -8,7 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.data.entities.ClientEntity;
 import project.data.repositories.ClientRepository;
-import project.models.dtos.ClientDTO;
+import project.models.dtos.ClientDisplayDTO;
+import project.models.dtos.ClientEditDTO;
+import project.models.dtos.ClientRegisterDTO;
 import project.models.dtos.mappers.ClientMapper;
 import project.models.exceptions.ClientNotFoundException;
 import project.models.exceptions.DuplicateEmailException;
@@ -16,9 +18,7 @@ import project.models.exceptions.PasswordDoNotEqualException;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Implementace rozhraní {@link ClientService} pro manipulaci s klienty
@@ -41,12 +41,12 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Vytvoří nové klienta
      *
-     * @param dto {@link ClientDTO}
+     * @param dto {@link ClientRegisterDTO}
      * @throws PasswordDoNotEqualException
      * @throws DuplicateEmailException
      */
     @Override
-    public void createNewClient(ClientDTO dto) {
+    public void createNewClient(ClientRegisterDTO dto) {
         //vyvolání výjimky při chybně zadaném heslu
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
             throw new PasswordDoNotEqualException();
@@ -68,11 +68,11 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Upraví informace o klientovi na základě předaných informací
      *
-     * @param dto {@link ClientDTO} Nové informace o klientovi
+     * @param dto {@link project.models.dtos.ClientEditDTO} Nové informace o klientovi
      * @throws ClientNotFoundException Pokud klient není nalezen
      */
     @Override
-    public void editClient(ClientDTO dto) {
+    public void editClient(ClientEditDTO dto) {
         ClientEntity fetchedClient = clientRepository
                 .findById(dto.getId())
                 .orElseThrow(ClientNotFoundException::new);
@@ -99,11 +99,11 @@ public class ClientServiceImpl implements ClientService {
      * Získá informace o klientovi dle jeho identifikátoru
      *
      * @param id Identifikátor klienta
-     * @return Informace o klientovi ve formátu {@link ClientDTO}
+     * @return Informace o klientovi ve formátu {@link project.models.dtos.ClientDisplayDTO}
      * @throws ClientNotFoundException Výjimka vyvolaná v případě nenalezení klienta
      */
     @Override
-    public ClientDTO getClientById(long id) {
+    public ClientDisplayDTO getClientById(long id) {
         ClientEntity fetchedClient = clientRepository
                 .findById(id)
                 .orElseThrow(ClientNotFoundException::new);
@@ -112,20 +112,23 @@ public class ClientServiceImpl implements ClientService {
 
     /**
      * Slouží pro získání všech záznamů {@link ClientEntity} z databáze
+     *
      * @return Seznam všech záznamů
      */
     @Override
-    public List<ClientDTO> getAllClients() {
+    public List<ClientDisplayDTO> getAllClients() {
+
         return clientRepository
                 .findAll()
                 .stream()
                 .map(entity -> clientMapper.entityToDTO(entity))
+                .peek(client -> client.setAge(calculateAge(client.getDateOfBirth())))
                 .toList();
-
     }
 
     /**
      * Slouží pro výpočet věku klienta dle data narození
+     *
      * @param dateOfBirth
      * @return Věk klienta
      */
@@ -136,3 +139,4 @@ public class ClientServiceImpl implements ClientService {
                 .getYears();
     }
 }
+
