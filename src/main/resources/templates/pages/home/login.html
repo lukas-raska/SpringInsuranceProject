@@ -9,7 +9,8 @@
 
 <header th:replace="~{fragments/layout.html :: header}"></header>
 
-<div th:if="${success}" th:text="${success}" class=" text-center bg-success text-white "></div>
+<div th:if="${successRegister}" th:text="${successRegister}" class=" text-center bg-success text-white "></div>
+
 <div th:if="${param.error}" class="text-center bg-danger text-white">Neplatný email nebo heslo</div>
 
 <article class="d-flex justify-content-center ">

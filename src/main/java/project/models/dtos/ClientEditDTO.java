@@ -36,7 +36,7 @@ public class ClientEditDTO {
     private String phoneNumber;
 
     @NotNull(message = "Vyplňte datum narození")
-    @DateTimeFormat(pattern = "dd.DD.yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @PastOrPresent(message = "Pokud nejsi cestovatel v čase, datum narození musí být v minulosti :-)")
     private LocalDate dateOfBirth;
 }

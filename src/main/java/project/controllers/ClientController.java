@@ -17,6 +17,8 @@ import project.models.exceptions.PasswordDoNotEqualException;
 import project.models.services.AuthenticationService;
 import project.models.services.ClientService;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,7 +88,7 @@ public class ClientController {
         }
 
         //po úspěšné registraci přesměrování na přihlášení a zobrazení flash zprávy
-        redirectAttributes.addFlashAttribute("success", "Uživatel zaregistrován");
+        redirectAttributes.addFlashAttribute("successRegister", "Uživatel zaregistrován");
 
         return "redirect:/login";
     }
@@ -146,7 +148,8 @@ public class ClientController {
     @GetMapping("/edit/{clientId}")
     public String renderEditForm(
             @PathVariable(name = "clientId") Long clientId,
-            @ModelAttribute ClientEditDTO dto
+            ClientEditDTO dto
+
     ) {
         //načtu data klienta k předvyplnění formuláře
         ClientDisplayDTO fetchedClient = clientService.getClientById(clientId);
@@ -154,36 +157,30 @@ public class ClientController {
         //načtenými daty updatuju dto předávané metodou controlleru
         clientMapper.updateClientDTO(fetchedClient, dto);
 
+
         return "pages/client/edit";
     }
 
 
-    @PutMapping("/edit/{clientId}")
+    @PostMapping("/edit/{clientId}")
     public String editClient(
             @PathVariable(name = "clientId") Long clientId,
             @Valid @ModelAttribute ClientEditDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
-        System.out.println("Metoda editClient spuštěna");
-        //kontrola validace - v případě chyb opětovné vykreslení formuláře + chybových hlášek (viz šablona)
+               //kontrola validace - v případě chyb opětovné vykreslení formuláře + chybových hlášek (viz šablona)
         if (result.hasErrors()) {
             System.out.println("Chyby: " + result);
-            return renderEditForm(clientId, dto);
+            return "pages/client/edit";
         }
-        System.out.println("DTO ukládané do db:");
-        System.out.println(dto);
 
         dto.setId(clientId);
         clientService.editClient(dto);
 
-        redirectAttributes.addFlashAttribute("success", "Úprava údajů proběhla úspěšně.");
+        redirectAttributes.addFlashAttribute("successEdit", "Úprava údajů proběhla úspěšně.");
 
-        System.out.println("Přihlášen uživatel?: " + authenticationService.isUserLoggedIn());
-        if (authenticationService.isUserLoggedIn()) {
-            return "redirect:/client/myDetail";
-        }
-        return "redirect:/client/{clientId}";
+        return "redirect:/";
     }
 
 }

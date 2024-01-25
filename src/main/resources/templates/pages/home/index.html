@@ -6,10 +6,13 @@
     <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
 </head>
 
+
+
 <body>
 
 <header th:replace="~{fragments/layout.html :: header}"></header>
 
+<div th:if="${successEdit}" th:text="${successEdit}" class=" text-center bg-success text-white "></div>
 
 <article class="text-center">
     <header class="my-5">
