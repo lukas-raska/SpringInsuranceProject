@@ -3,10 +3,9 @@ package project.models.services;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import project.models.dtos.ClientDisplayDTO;
 import project.models.dtos.ClientEditDTO;
-import project.models.dtos.ClientRegisterDTO;
+import project.models.dtos.client.ClientRegisterDTO;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 /**
@@ -24,14 +23,14 @@ public interface ClientService extends UserDetailsService {
 
     /**
      * Upraví informace o stávajícím klientovi
-     * @param dto {@link project.models.dtos.ClientEditDTO}
+     * @param dto {@link ClientEditDTO}
      */
     void editClient (ClientEditDTO dto);
 
     /**
      * Získá informace o klientovi dle jeho identifikátoru
      * @param id Identifikátor klienta
-     * @return {@link project.models.dtos.ClientDisplayDTO}
+     * @return {@link ClientDisplayDTO}
      */
     ClientDisplayDTO getClientById (long id);
 

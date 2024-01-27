@@ -10,7 +10,7 @@ import project.data.entities.ClientEntity;
 import project.data.repositories.ClientRepository;
 import project.models.dtos.ClientDisplayDTO;
 import project.models.dtos.ClientEditDTO;
-import project.models.dtos.ClientRegisterDTO;
+import project.models.dtos.client.ClientRegisterDTO;
 import project.models.dtos.mappers.ClientMapper;
 import project.models.exceptions.ClientNotFoundException;
 import project.models.exceptions.DuplicateEmailException;
@@ -56,6 +56,7 @@ public class ClientServiceImpl implements ClientService {
         ClientEntity newClient = new ClientEntity();
         newClient = clientMapper.dtoToEntity(dto);
         newClient.setPassword(passwordEncoder.encode(dto.getPassword())); //heslo neukládám přes mapper, ale ručně (hashování)
+        newClient.setRegistrationDate(LocalDate.now());
 
         //pokud o uložení (výjimka v případě duplicitního emailu)
         try {
@@ -68,7 +69,7 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Upraví informace o klientovi na základě předaných informací
      *
-     * @param dto {@link project.models.dtos.ClientEditDTO} Nové informace o klientovi
+     * @param dto {@link ClientEditDTO} Nové informace o klientovi
      * @throws ClientNotFoundException Pokud klient není nalezen
      */
     @Override
@@ -99,7 +100,7 @@ public class ClientServiceImpl implements ClientService {
      * Získá informace o klientovi dle jeho identifikátoru
      *
      * @param id Identifikátor klienta
-     * @return Informace o klientovi ve formátu {@link project.models.dtos.ClientDisplayDTO}
+     * @return Informace o klientovi ve formátu {@link ClientDisplayDTO}
      * @throws ClientNotFoundException Výjimka vyvolaná v případě nenalezení klienta
      */
     @Override

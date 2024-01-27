@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="cs-cz" xmlns:th="http://www.thymeleaf.org" th:object="${clientDTO}">
 
-<head       th:replace="~{fragments/layout.html :: head('Můj přehled: ' + *{firstName} + ' ' + *{lastName})}"></head>
+<head th:replace="~{fragments/layout.html :: head('Můj přehled: ' + *{firstName} + ' ' + *{lastName})}"></head>
 <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
 <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
 
@@ -12,7 +12,7 @@
 <article class="container ">
 
     <!--Start sekce - osobní údaje-->
-    <section class="container bg-dark-subtle mt-4"          >
+    <section class="container bg-dark-subtle mt-4">
         <div class="row  ">
             <div class="mx-5 my-3">
                 <h3 class="col-12">
@@ -47,14 +47,24 @@
     <div class="container border my-2">
         <div class="row d-flex justify-content-between  ">
             <div class="col-sm text-center">
-              <a th:href="@{'/client/edit/' + *{id}}" class="btn btn-outline-info col  m-2">Změnit osobní údaje</a>
+                <a th:href="@{'/client/edit/' + *{id}}" class="btn btn-outline-info col  m-2">Změnit osobní údaje</a>
             </div>
             <div class="col-sm text-center ">
-              <a class="btn btn-outline-danger  m-2 ">Smazat účet</a>  
+                <a class="btn btn-outline-danger  m-2 ">Smazat účet</a>
             </div>
             <div class="col-sm text-center">
-                <a class="btn btn-outline-danger  m-2     ">Změnit heslo</a>  
-              </div>
+                <a class="btn btn-outline-danger  m-2     ">Změnit heslo</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container border my-2">
+        <div class="row d-flex justify-content-between  ">
+            <div class="col-sm text-center">
+                <a th:href="@{'/client/' + *{id} + '/insurance/new'}" class="btn btn-outline-primary  col  m-2">Přidat
+                    nové pojištění</a>
+            </div>
+
         </div>
     </div>
 
@@ -65,22 +75,23 @@
         <header>
             <h2>Sjednaná pojištění</h2>
         </header>
-        <table class="table table-hover   ">
+        <table class="table table-hover"
+                th:object="${insuranceDTO}">
             <thead>
             <tr>
-                <th>Pojištění</th>
-                <th>Částka</th>
-                <th>Datum</th>
+                <th>Jméno klienta</th>
+                <th>Druh pojištění</th>
+                <th>Poj. částka</th>
+                <th>Datum sjednání</th>
             </tr>
             </thead>
             <tbody>
-            <a href="/src/main/resources/templates/pages/home/about.html">
-                <tr onclick="window.location.href='/src/main/resources/templates/pages/home/about.html'">
-                    <td>Pojištění majetku</td>
-                    <td class="">1000000</td>
-                    <td>1.1.24</td>
-                </tr>
-            </a>
+            <tr>
+                <td>Pojištění majetku</td>
+                <td class="">1000000</td>
+                <td>1.1.24</td>
+            </tr>
+
             </tbody>
         </table>
     </section>

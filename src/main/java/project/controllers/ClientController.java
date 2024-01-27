@@ -10,16 +10,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.data.entities.ClientEntity;
 import project.models.dtos.ClientDisplayDTO;
 import project.models.dtos.ClientEditDTO;
-import project.models.dtos.ClientRegisterDTO;
+import project.models.dtos.client.ClientRegisterDTO;
 import project.models.dtos.mappers.ClientMapper;
 import project.models.exceptions.DuplicateEmailException;
 import project.models.exceptions.PasswordDoNotEqualException;
 import project.models.services.AuthenticationService;
 import project.models.services.ClientService;
 
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.List;
 import java.util.Optional;
 
 /**

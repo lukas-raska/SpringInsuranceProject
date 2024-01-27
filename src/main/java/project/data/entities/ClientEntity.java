@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import project.data.entities.insurance.InsuranceEntity;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -36,18 +37,29 @@ public class ClientEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String street;
 
+    @Column(nullable = false)
     private String streetNumber;
 
+    @Column(nullable = false)
     private String city;
 
+    @Column(nullable = false)
     private String zipCode;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
     private LocalDate dateOfBirth;
 
+    @OneToMany(mappedBy = "insuredClient")
+    private List<InsuranceEntity> contractedInsurances;
+
+    @Column(nullable = false)
+    private LocalDate registrationDate;
 
 
     //UserDetails methods - START

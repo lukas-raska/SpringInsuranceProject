@@ -6,7 +6,7 @@ import org.mapstruct.MappingTarget;
 import project.data.entities.ClientEntity;
 import project.models.dtos.ClientDisplayDTO;
 import project.models.dtos.ClientEditDTO;
-import project.models.dtos.ClientRegisterDTO;
+import project.models.dtos.client.ClientRegisterDTO;
 
 /**
  * Rozhraní pro mapování meti objekty {@link ClientRegisterDTO} a {@link ClientEntity}

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import project.data.entities.ClientEntity;
 import project.models.dtos.ClientDisplayDTO;
-import project.models.dtos.ClientRegisterDTO;
 import project.models.dtos.mappers.ClientMapper;
 import project.models.services.AuthenticationService;
 

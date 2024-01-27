@@ -1,4 +1,4 @@
-package project.models.dtos;
+package project.models.dtos.client;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;

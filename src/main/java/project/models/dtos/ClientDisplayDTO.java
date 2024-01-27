@@ -1,6 +1,7 @@
 package project.models.dtos;
 
 import lombok.Data;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -21,4 +22,5 @@ public class ClientDisplayDTO {
     private String phoneNumber;
     private LocalDate dateOfBirth;
     private int age;
+    private LocalDate dateOfRegistration;
 }
