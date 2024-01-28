@@ -8,10 +8,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.models.dtos.InsuranceDTO;
+import project.models.exceptions.InsuranceNotFoundException;
 import project.models.exceptions.WrongInsuranceDatesException;
 import project.models.services.InsuranceService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 
@@ -53,11 +55,30 @@ public class InsuranceController {
     }
 
     @GetMapping("insurance/list")
-    public String renderAllInsurances (Model model){
+    public String renderAllInsurances(Model model) {
         List<InsuranceDTO> allInsurances = insuranceService.getAllInsurances();
 
         model.addAttribute("allInsurances", allInsurances);
         return "pages/insurance/list";
     }
 
+    @GetMapping("insurance/{insuranceId}")
+    public String renderInsuranceDetail(
+            @PathVariable(name = "insuranceId") Long insuranceId,
+            Model model
+    ) {
+        InsuranceDTO dto = insuranceService
+                .getInsuranceById(insuranceId)
+                .orElseThrow(InsuranceNotFoundException::new);
+
+        model.addAttribute("insuranceDetail", dto);
+
+        return "pages/insurance/detail";
+    }
+
+    @ExceptionHandler(InsuranceNotFoundException.class)
+    public String handleInsuranceNotFoundException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("insuranceNotFound", "Pojistná smlouva nenalezena.");
+        return "redirect:/";
+    }
 }

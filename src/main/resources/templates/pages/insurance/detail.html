@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout.html :: head('Detail pojistné smlouvy')}"></head>
+<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+
+<body>
+
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article class="container " th:object="${insuranceDetail}">
+
+    <header class=" text-center row ">
+        <h1 class="mt-4">Detail pojistné smlouvy č. <span>1</span></h1>
+    </header>
+
+    <!--Start sekce - klient-->
+    <section class="container bg-dark-subtle mt-4">
+        <div class="row py-2">
+            <div class="ms-5">
+                <h6>Klient: </h6>
+                <a th:href="@{'/client/' + *{insuredClient.id}}">
+                    <p>
+                        <span  th:text="*{insuredClient.firstName}"></span>
+                        <span  th:text="*{insuredClient.lastName}"></span>
+                    </p>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!--konec sekce - klient-->
+
+    <!--Start sekce - údaje smlouvy-->
+    <section class="container bg-dark-subtle mt-4">
+        <div class="row py-2">
+            <div class="col-sm-6 ">
+                <div class="ms-5">
+                    <p>Druh pojištění: <span th:text="*{insuranceType.description}"></span></p>
+                    <p>Pojistná částka: <span th:text="*{amountOfInsurance} + ' Kč'"></span></p>
+                    <p>Datum vytvoření:
+                        <span th:text="${#temporals.format(insuranceDetail.dateOfRegistry, 'dd.MM.yyyy')}"></span></p>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="ms-5">
+                    <p>Počátek pojištění:
+                        <span th:text="${#temporals.format(insuranceDetail.insuranceStart, 'dd.MM.yyyy')}"></span>
+                    </p>
+                    <p>Konec pojištění:
+                        <span th:text="${#temporals.format(insuranceDetail.insuranceEnd, 'dd.MM.yyyy')}"></span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--konec sekce - osobní údaje-->
+
+
+    <div class="container border my-2">
+        <div class="row d-flex justify-content-between  ">
+            <div class="col-sm text-center">
+                <a th:href="@{'/client/edit/' + *{id}}" class="btn btn-outline-info col  m-2">Pozměnit
+                    údaje</a>
+            </div>
+            <div class="col-sm text-center ">
+                <a class="btn btn-outline-danger  m-2 ">Zrušit smlouvu</a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <p class="my-5"></p>
+
+
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+
+</body>
+
+</html>

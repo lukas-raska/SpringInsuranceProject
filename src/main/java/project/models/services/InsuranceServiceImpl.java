@@ -7,10 +7,12 @@ import project.data.repositories.ClientRepository;
 import project.data.repositories.InsuranceRepository;
 import project.models.dtos.InsuranceDTO;
 import project.models.dtos.mappers.InsuranceMapper;
+import project.models.exceptions.InsuranceNotFoundException;
 import project.models.exceptions.WrongInsuranceDatesException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -45,6 +47,11 @@ public class InsuranceServiceImpl implements InsuranceService {
                 .stream()
                 .map(insuranceEntity -> insuranceMapper.entityToDTO(insuranceEntity))
                 .collect(Collectors.toList());
+    }
 
+    @Override
+    public Optional<InsuranceDTO> getInsuranceById(long id) {
+        InsuranceEntity fetchedEntity = insuranceRepository.findById(id).orElseThrow(InsuranceNotFoundException::new);
+        return Optional.of(insuranceMapper.entityToDTO(fetchedEntity));
     }
 }

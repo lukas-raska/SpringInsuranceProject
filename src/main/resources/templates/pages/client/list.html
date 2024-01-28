@@ -32,8 +32,8 @@
                         <td th:text="${client.street} + ' ' + ${client.streetNumber} + ', ' + ${client.city}">Praha</td>
                         <td th:text="${client.age}">30</td>
                         <td class="text-end ">
-                            <a th:href="@{'/client/' + ${client.id}}" class="btn btn-outline-secondary  ">Detail</a>
-                            <a th:href="@{'/client/edit/' + ${client.id}}" class="btn btn-outline-primary   ">Upravit</a>
+                            <a th:href="@{'/client/' + ${client.id}}" class="btn btn-outline-info  ">Detail</a>
+                            <a th:href="@{'/client/edit/' + ${client.id}}" class="btn btn-outline-dark    ">Upravit</a>
                             <a th:href="@{'/client/delete' + ${client.id}}" class="btn btn-outline-danger">Smazat</a>
                         </td>
                     </tr>
