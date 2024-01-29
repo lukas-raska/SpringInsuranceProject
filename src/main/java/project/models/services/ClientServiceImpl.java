@@ -127,6 +127,12 @@ public class ClientServiceImpl implements ClientService {
                 .toList();
     }
 
+
+    @Override
+    public void deleteClient(long id) {
+        clientRepository.deleteById(id);
+    }
+
     /**
      * Slouží pro výpočet věku klienta dle data narození
      *

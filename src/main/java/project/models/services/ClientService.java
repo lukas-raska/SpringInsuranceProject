@@ -40,6 +40,11 @@ public interface ClientService extends UserDetailsService {
      */
     List<ClientDisplayDTO> getAllClients();
 
+    /**
+     * Odstraní záznam o klientovi z databáze
+     * @param id
+     */
+    void deleteClient (long id);
 
     /**
      * Vypočte věk dle zadaného data narození
@@ -47,6 +52,8 @@ public interface ClientService extends UserDetailsService {
      * @return Věk
      */
     int calculateAge (LocalDate dateOfBirth);
+
+
 
 
 

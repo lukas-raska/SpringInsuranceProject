@@ -12,4 +12,6 @@ public interface InsuranceService {
     List<InsuranceDTO> getAllInsurances();
 
     Optional<InsuranceDTO> getInsuranceById (long id);
+
+    List<InsuranceDTO> getInsurancesByClientId(long clientId);
 }

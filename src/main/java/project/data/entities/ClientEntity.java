@@ -55,7 +55,7 @@ public class ClientEntity implements UserDetails {
     @Column(nullable = false)
     private LocalDate dateOfBirth;
 
-    @OneToMany(mappedBy = "insuredClient")
+    @OneToMany(mappedBy = "insuredClient", cascade = CascadeType.REMOVE)
     private List<InsuranceEntity> contractedInsurances;
 
     @Column(nullable = false)

@@ -39,7 +39,6 @@ public class InsuranceController {
             RedirectAttributes redirectAttributes
     ) {
         if (result.hasErrors()) {
-            System.out.println("Chyby: " + result);
             return "pages/insurance/new";
         }
         try {
@@ -50,6 +49,7 @@ public class InsuranceController {
             result.rejectValue("insuranceEnd", "error", "Konec pojištění nelze stanovit před jeho počátkem");
             return "pages/insurance/new";
         }
+        redirectAttributes.addFlashAttribute("newInsuranceCreated", "Pojistná smlouva vytvořena.");
 
         return "redirect:/client/{clientId}";
     }

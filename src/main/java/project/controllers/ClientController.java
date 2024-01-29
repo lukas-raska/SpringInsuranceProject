@@ -16,6 +16,7 @@ import project.models.exceptions.DuplicateEmailException;
 import project.models.exceptions.PasswordDoNotEqualException;
 import project.models.services.AuthenticationService;
 import project.models.services.ClientService;
+import project.models.services.InsuranceService;
 
 import java.util.Optional;
 
@@ -28,6 +29,9 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private InsuranceService insuranceService;
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -125,7 +129,7 @@ public class ClientController {
             Model model
     ) {
         model.addAttribute("clientDTO", clientService.getClientById(clientId));
-
+        model.addAttribute("clientInsurances", insuranceService.getInsurancesByClientId(clientId));
         return "pages/client/detail";
 
     }
@@ -166,7 +170,7 @@ public class ClientController {
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
-               //kontrola validace - v případě chyb opětovné vykreslení formuláře + chybových hlášek (viz šablona)
+        //kontrola validace - v případě chyb opětovné vykreslení formuláře + chybových hlášek (viz šablona)
         if (result.hasErrors()) {
             System.out.println("Chyby: " + result);
             return "pages/client/edit";
@@ -176,6 +180,17 @@ public class ClientController {
         clientService.editClient(dto);
 
         redirectAttributes.addFlashAttribute("successEdit", "Úprava údajů proběhla úspěšně.");
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/delete/{clientId}")
+    public String deleteClient(
+            @PathVariable(name = "clientId") Long clientId,
+            RedirectAttributes redirectAttributes
+    ){
+        clientService.deleteClient(clientId);
+        redirectAttributes.addFlashAttribute("successDelete", "Klient odstraněn.");
 
         return "redirect:/";
     }

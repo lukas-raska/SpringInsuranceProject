@@ -7,6 +7,7 @@ import project.data.repositories.ClientRepository;
 import project.data.repositories.InsuranceRepository;
 import project.models.dtos.InsuranceDTO;
 import project.models.dtos.mappers.InsuranceMapper;
+import project.models.exceptions.ClientNotFoundException;
 import project.models.exceptions.InsuranceNotFoundException;
 import project.models.exceptions.WrongInsuranceDatesException;
 
@@ -53,5 +54,15 @@ public class InsuranceServiceImpl implements InsuranceService {
     public Optional<InsuranceDTO> getInsuranceById(long id) {
         InsuranceEntity fetchedEntity = insuranceRepository.findById(id).orElseThrow(InsuranceNotFoundException::new);
         return Optional.of(insuranceMapper.entityToDTO(fetchedEntity));
+    }
+
+    @Override
+    public List<InsuranceDTO> getInsurancesByClientId(long clientId) {
+        return insuranceRepository
+                .findByInsuredClientId(clientId)
+                .orElseThrow(ClientNotFoundException::new)
+                .stream()
+                .map(entity -> insuranceMapper.entityToDTO(entity))
+                .collect(Collectors.toList());
     }
 }
