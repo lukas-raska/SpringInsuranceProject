@@ -9,38 +9,58 @@
 
 <header th:replace="~{fragments/layout.html :: header}"></header>
 
+<!--flash messages-->
+<div th:if="${clientNotFound}" th:text="${clientNotFound}" class=" text-center bg-danger text-white "></div>
+<!--flash messages-->
+
 <article class="container ">
-    <header>
+    <header class="d-flex justify-content-between    ">
         <h1 class="mt-4">
-            Seznam klientů
+            Přehled klientů
         </h1>
+        <div class="align-items-baseline">
+          <a th:href="@{/client/register}"
+           class="btn btn-outline-primary align-self-center ">
+            Nový klient
+        </a>  
+        </div>
+        
     </header>
 
     <section>
-        <table class="table table-hover align-middle">
+        <table class="table table-hover align-middle ">
             <thead>
             <tr>
                 <th>Jméno</th>
-                <th>Bydliště</th>
-                <th>Věk</th>
+                <th class="d-none d-md-table-cell  ">Bydliště</th>
+                <th class="d-none d-sm-table-cell   ">Věk</th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="client : ${allClientsList}">
-                <td th:text="${client.firstName} + ' ' + ${client.lastName}">Jan Novák</td>
-                <td th:text="${client.street} + ' ' + ${client.streetNumber} + ', ' + ${client.city}">Praha</td>
-                <td th:text="${client.age}">30</td>
+                <td>
+                    <a th:href="@{'/client/' + ${client.id}}">
+                        <span th:text="${client.firstName} + ' ' + ${client.lastName}"></span>
+                    </a>
+                </td>
+                <td th:text="${client.street} + ' ' + ${client.streetNumber} + ', ' + ${client.city}"
+                    class="d-none d-md-table-cell ">Praha
+                </td>
+                <td th:text="${client.age}" class="d-sm-table-cell ">30
+
+                </td>
                 <td class="text-end ">
-                    <a th:href="@{'/client/' + ${client.id}}" class="btn btn-outline-info  ">Detail</a>
-                    <a th:href="@{'/client/edit/' + ${client.id}}" class="btn btn-outline-dark    ">Upravit</a>
-                    <form th:action="@{'/client/delete/' + ${client.id}}"
-                          th:method="post">
-                        <button class="btn btn-outline-danger"
-                                type="submit">
-                            Smazat
-                        </button>
-                    </form>
+                    <div class="d-flex justify-content-evenly  g-5 ">
+                        <a th:href="@{'/client/edit/' + ${client.id}}"
+                           class="btn btn-outline-dark    ">Upravit</a>
+                        <form th:action="@{'/client/delete/' + ${client.id}}" th:method="post">
+                            <button class="btn btn-outline-danger" type="submit">
+                                Smazat
+                            </button>
+                        </form>
+                    </div>
+
 
                 </td>
             </tr>

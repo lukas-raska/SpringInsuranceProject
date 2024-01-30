@@ -36,4 +36,5 @@ public class InsuranceEntity {
     private LocalDate dateOfRegistry;
 
 
+
 }

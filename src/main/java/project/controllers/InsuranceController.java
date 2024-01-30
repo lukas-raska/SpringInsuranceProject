@@ -8,12 +8,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.models.dtos.InsuranceDTO;
+import project.models.dtos.mappers.InsuranceMapper;
 import project.models.exceptions.InsuranceNotFoundException;
 import project.models.exceptions.WrongInsuranceDatesException;
 import project.models.services.InsuranceService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 
@@ -21,6 +21,9 @@ public class InsuranceController {
 
     @Autowired
     private InsuranceService insuranceService;
+
+    @Autowired
+    private InsuranceMapper insuranceMapper;
 
     @GetMapping("/client/{clientId}/insurance/new")
     public String renderNewInsuranceForm(
@@ -67,18 +70,54 @@ public class InsuranceController {
             @PathVariable(name = "insuranceId") Long insuranceId,
             Model model
     ) {
-        InsuranceDTO dto = insuranceService
-                .getInsuranceById(insuranceId)
-                .orElseThrow(InsuranceNotFoundException::new);
+        InsuranceDTO dto = insuranceService.getInsuranceById(insuranceId);
 
         model.addAttribute("insuranceDetail", dto);
 
         return "pages/insurance/detail";
     }
 
+    @GetMapping("/insurance/{insuranceId}/edit")
+    public String renderEditForm(
+            @PathVariable(name = "insuranceId") Long insuranceId,
+            @ModelAttribute InsuranceDTO dto
+    ) {
+        System.out.println("Metoda renderEditForm volána.");
+        //předvyplnění formuláře - načtu data o pojistce z db a překopíruju do dto ve formuláři
+        InsuranceDTO dtoToEdit = insuranceService.getInsuranceById(insuranceId);
+        System.out.println("DTO to edit: " + dtoToEdit);
+        System.out.println("dto formuláře před updatem: " + dto);
+        insuranceMapper.updateInsuranceDTO(dtoToEdit, dto);
+        System.out.println("dto formuláře po updatu: " + dto);
+        return "pages/insurance/editForm";
+    }
+
+    @PostMapping("/insurance/{insuranceId}/edit")
+    public String editInsurance(
+            @PathVariable(name = "insuranceId") Long insuranceId,
+            @Valid @ModelAttribute InsuranceDTO dto,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ) {
+        System.out.println("\nMetoda edit insurance volána.");
+        if (result.hasErrors()) {
+            System.out.println("Zjištěny vallidační chyby:");
+            System.out.println(result.getAllErrors());
+            return renderEditForm(insuranceId, dto);
+        }
+        System.out.println("DTO před editací: " + dto);
+        dto.setId(insuranceId);
+        insuranceService.editInsurance(dto);
+        System.out.println("DTO po editaci: " + dto);
+
+        redirectAttributes.addFlashAttribute("successInsuranceEdit", "Údaje změněny");
+
+        return "redirect:/insurance/list";
+    }
+
     @ExceptionHandler(InsuranceNotFoundException.class)
     public String handleInsuranceNotFoundException(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("insuranceNotFound", "Pojistná smlouva nenalezena.");
-        return "redirect:/";
+        return "redirect:/insurance/list";
     }
 }

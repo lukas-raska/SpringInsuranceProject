@@ -12,7 +12,9 @@ import project.models.dtos.ClientDisplayDTO;
 import project.models.dtos.ClientEditDTO;
 import project.models.dtos.client.ClientRegisterDTO;
 import project.models.dtos.mappers.ClientMapper;
+import project.models.exceptions.ClientNotFoundException;
 import project.models.exceptions.DuplicateEmailException;
+import project.models.exceptions.InsuranceNotFoundException;
 import project.models.exceptions.PasswordDoNotEqualException;
 import project.models.services.AuthenticationService;
 import project.models.services.ClientService;
@@ -193,6 +195,12 @@ public class ClientController {
         redirectAttributes.addFlashAttribute("successDelete", "Klient odstraněn.");
 
         return "redirect:/";
+    }
+
+    @ExceptionHandler(ClientNotFoundException.class)
+    public String handleClientNotFoundException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("clientNotFound", "Klient nenalezen");
+        return "redirect:/client/list";
     }
 
 }

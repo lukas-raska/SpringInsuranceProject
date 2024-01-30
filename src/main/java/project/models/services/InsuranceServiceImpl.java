@@ -13,10 +13,11 @@ import project.models.exceptions.WrongInsuranceDatesException;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-
+/**
+ * Implementace rozhraní {@link InsuranceService} sloužící pro manipulaci se záznamy o pojistkách
+ */
 @Service
 public class InsuranceServiceImpl implements InsuranceService {
 
@@ -27,13 +28,17 @@ public class InsuranceServiceImpl implements InsuranceService {
     @Autowired
     private ClientRepository clientRepository;
 
+    /**
+     * Vytvoří nový záznam - pojištění
+     *
+     * @param dto {@link InsuranceDTO} - data z formuláře
+     */
     @Override
     public void newInsurance(InsuranceDTO dto) {
         if (dto.getInsuranceEnd().isBefore(dto.getInsuranceStart())) {
             throw new WrongInsuranceDatesException();
         }
-        InsuranceEntity newInsurance = new InsuranceEntity();
-        newInsurance = insuranceMapper.dtoToEntity(dto);
+        InsuranceEntity newInsurance = insuranceMapper.dtoToEntity(dto);
         newInsurance.setInsuredClient(clientRepository.getReferenceById(dto.getClientId()));
         newInsurance.setDateOfRegistry(LocalDate.now());
 
@@ -41,6 +46,11 @@ public class InsuranceServiceImpl implements InsuranceService {
 
     }
 
+    /**
+     * Získá všechny záznamy - pojištění z databáze
+     *
+     * @return - seznam {@link InsuranceDTO}
+     */
     @Override
     public List<InsuranceDTO> getAllInsurances() {
         return insuranceRepository
@@ -50,12 +60,24 @@ public class InsuranceServiceImpl implements InsuranceService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Získá záznam o pojistce dle unikátního identifikátoru
+     *
+     * @param id - identifikátor pojistky
+     * @return {@link}
+     */
     @Override
-    public Optional<InsuranceDTO> getInsuranceById(long id) {
+    public InsuranceDTO getInsuranceById(long id) {
         InsuranceEntity fetchedEntity = insuranceRepository.findById(id).orElseThrow(InsuranceNotFoundException::new);
-        return Optional.of(insuranceMapper.entityToDTO(fetchedEntity));
+        return insuranceMapper.entityToDTO(fetchedEntity);
     }
 
+    /**
+     * Získá všechny záznamy - pojistky dle konkrétního klienta
+     *
+     * @param clientId - identifikátor klienta
+     * @return Seznam pojistek ve formátu {@link InsuranceDTO}
+     */
     @Override
     public List<InsuranceDTO> getInsurancesByClientId(long clientId) {
         return insuranceRepository
@@ -64,5 +86,36 @@ public class InsuranceServiceImpl implements InsuranceService {
                 .stream()
                 .map(entity -> insuranceMapper.entityToDTO(entity))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Edituje existující záznam
+     *
+     * @param dto {@link InsuranceDTO}
+     */
+    @Override
+    public void editInsurance(InsuranceDTO dto) {
+        System.out.println("\nInsuranceService.editInsurance volána:");
+        System.out.println("DTO: " + dto);
+        InsuranceEntity fetchedEntity = insuranceRepository
+                .findById(dto.getId())
+                .orElseThrow(InsuranceNotFoundException::new);
+        System.out.println("Načtená entita: " + fetchedEntity);
+        insuranceMapper.updateInsuranceEntity(dto, fetchedEntity);
+        insuranceRepository.save(fetchedEntity);
+
+    }
+
+    /**
+     * Odstraní záznam - pojistku se zadaným identifikátorem
+     *
+     * @param id {@link InsuranceDTO}
+     */
+    @Override
+    public void deleteInsurance(Long id) {
+        if (id == null) {
+            throw new InsuranceNotFoundException();
+        }
+        insuranceRepository.deleteById(id);
     }
 }

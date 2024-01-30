@@ -123,6 +123,25 @@ public class ClientEntity implements UserDetails {
 
     //UserDetails methods - END
 
+
+    @Override
+    public String toString() {
+        return "ClientEntity{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", street='" + street + '\'' +
+                ", streetNumber='" + streetNumber + '\'' +
+                ", city='" + city + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", contractedInsurances=" + contractedInsurances +
+                ", registrationDate=" + registrationDate +
+                '}';
+    }
 }
 
 

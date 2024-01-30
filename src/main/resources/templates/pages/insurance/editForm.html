@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout.html :: head('Editace pojištění')}"></head>
+<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+
+<body>
+
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article class="container mb-5">
+    <div>
+        <header class="text-center row ">
+            <h1 class="mt-4">Úprava pojistné smlouvy</h1>
+        </header>
+
+
+        <section class="row">
+            <form class=" border bg-dark-subtle offset-md-1 col-md-10"
+                  th:action="@{'/insurance/' + *{id} + '/edit'}"
+                  th:object="${insuranceDTO}"
+                  method="post">
+
+                <!--přihlašovací údaje-->
+                <div class="container my-4 pb-4 border border-secondary rounded-4  ">
+
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="insuranceType" class="form-label">Typ pojištění</label>
+                            <select class="form-select" th:field="*{insuranceType}">
+                                <option value="">"Vyberte typ pojištění"</option>
+                                <option th:each="type: ${T(project.data.entities.insurance.InsuranceType).values()}"
+                                        th:value="${type}"
+                                        th:text="${type.description}"
+                                        id="insuranceType"></option>
+                            </select>
+                            <small th:errors="*{insuranceType}" class="form-text text-danger "></small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="amountOfInsurance" class="form-label">Pojistná částka [Kč]</label>
+                            <input th:field="*{amountOfInsurance}" type="number" class="form-control"
+                                   name="amountOfInsurance" id="amountOfInsurance"/>
+                            <small th:errors="*{amountOfInsurance}" class="form-text text-danger "></small>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="insuranceStart" class="form-label">Počátek pojištění</label>
+                            <input th:field="*{insuranceStart}" type="date" class="form-control" name="insuranceStart"
+                                   id="insuranceStart"/>
+                            <small th:errors="*{insuranceStart}" class="form-text text-danger "></small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="insuranceEnd" class="form-label">Konec pojištění</label>
+                            <input th:field="*{insuranceEnd}" type="date" class="form-control" name="insuranceEnd"
+                                   id="insuranceEnd"/>
+                            <small th:errors="*{insuranceEnd}" class="form-text text-danger "></small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-3 text-center ">
+                    <button type="submit" class="btn btn-outline-success       ">
+                        Uložit
+                    </button>
+                </div>
+            </form>
+
+            <div class="my-3"></div>
+
+        </section>
+    </div>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+
+</body>
+
+</html>
