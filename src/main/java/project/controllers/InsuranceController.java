@@ -15,8 +15,10 @@ import project.models.services.InsuranceService;
 
 import java.util.List;
 
+/**
+ * Controller pro manipulaci s Insurance
+ */
 @Controller
-
 public class InsuranceController {
 
     @Autowired
@@ -25,15 +27,24 @@ public class InsuranceController {
     @Autowired
     private InsuranceMapper insuranceMapper;
 
+    /**
+     * Vykreslí formulář pro tvorbu nového pojištění
+     * @param dto {@link InsuranceDTO}
+     * @return Šablonu s formulářem
+     */
     @GetMapping("/client/{clientId}/insurance/new")
-    public String renderNewInsuranceForm(
-            //@PathVariable(name = "clientId") Long clientId,
-            @ModelAttribute InsuranceDTO dto) {
-
-        System.out.println("renderNewInsuranceForm spuštěno");
+    public String renderNewInsuranceForm(@ModelAttribute InsuranceDTO dto) {
         return "pages/insurance/new";
     }
 
+    /**
+     * Zpracuje požadavek na vytvoření nové pojistky
+     * @param clientId - Identifikátor klienta (přijatý z URL)
+     * @param dto - {@link InsuranceDTO} - objekt s daty vyplněnými ve formuláři
+     * @param result - {@link BindingResult} - objekt pro práci s výsledky validace formuláře
+     * @param redirectAttributes - slouží pro přidání flash zpráv po vytvoření
+     * @return Po odeslání přesměruje na zvolenou adresu
+     */
     @PostMapping("/client/{clientId}/insurance/new")
     public String createNewInsurance(
             @PathVariable(name = "clientId") Long clientId,
@@ -41,8 +52,9 @@ public class InsuranceController {
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
+        //v případě validačních chyb opětovně vykreslí formulář
         if (result.hasErrors()) {
-            return "pages/insurance/new";
+            return renderNewInsuranceForm(dto);
         }
         try {
             dto.setClientId(clientId);

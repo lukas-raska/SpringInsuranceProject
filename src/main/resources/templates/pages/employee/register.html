@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/layout.html :: head('Editace klienta')}"></head>
+<head th:replace="~{fragments/layout.html :: head('Registrace nového zaměstance')}"></head>
 <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
 <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
 
@@ -12,15 +12,44 @@
 <article class="container mb-5">
     <div>
         <header class="text-center row ">
-            <h1>Úprava osobních údajů</h1>
+            <h1>Registrace nového zaměstnance</h1>
         </header>
+
+
 
 
         <section class="row">
             <form class=" border bg-dark-subtle offset-md-1 col-md-10"
-                  th:action="@{'/client/edit/' + *{id}}"
-                  th:object="${userEditDTO}"
+                  th:action="@{/employee/register}"
+                  th:object="${userRegisterDTO}"
                   method="post">
+
+                <!--přihlašovací údaje-->
+                <div class="container my-4 pb-4 border border-secondary rounded-4  ">
+                    <h6 class="text-center mt-2">Přihlašovací údaje</h6>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="email" class="form-label">Email</label>
+                            <input th:field="*{email}" type="email" class="form-control" name="email" id="email"/>
+                            <small th:errors="*{email}" class="form-text text-danger "></small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Heslo</label>
+                            <input th:field="*{password}" type="password" class="form-control" name="password"
+                                   id="password"/>
+                            <small th:errors="*{password}" class="form-text text-danger "></small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="confirmPassword" class="form-label">Zopakování hesla</label>
+                            <input th:field="*{confirmPassword}" type="password" class="form-control"
+                                   name="confirmPassword" id="confirmPassword"/>
+                            <small th:errors="*{confirmPassword}" class="form-text text-danger "></small>
+                        </div>
+
+                    </div>
+                </div>
 
 
                 <!--osobní údaje-->
@@ -57,7 +86,6 @@
                     </div>
                 </div>
 
-
                 <!--adresa-->
                 <div class="container my-4 pb-3 border border-secondary rounded-4  ">
                     <h6 class="text-center mt-2">Bydliště</h6>
@@ -90,11 +118,12 @@
                         </div>
                     </div>
                 </div>
+               
 
 
                 <div class="m-3 text-center ">
                     <button type="submit" class="btn btn-outline-dark      ">
-                        Uložit
+                        Registrovat
                     </button>
                 </div>
             </form>

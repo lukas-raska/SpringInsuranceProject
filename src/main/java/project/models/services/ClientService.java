@@ -1,9 +1,9 @@
 package project.models.services;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
-import project.models.dtos.ClientDisplayDTO;
-import project.models.dtos.ClientEditDTO;
-import project.models.dtos.client.ClientRegisterDTO;
+
+import project.models.dtos.UserDisplayDTO;
+import project.models.dtos.UserEditDTO;
+import project.models.dtos.UserRegisterDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,47 +11,47 @@ import java.util.List;
 /**
  * Rozhraní pro službu pracující s klienty
  */
-public interface ClientService extends UserDetailsService {
+public interface ClientService {//extends UserDetailsService
 
 
     /**
      * Vytvoří nového klienta
-     * @param dto {@link ClientRegisterDTO}
+     * @param dto {@link UserRegisterDTO}
      */
-    void createNewClient(ClientRegisterDTO dto);
+    void create(UserRegisterDTO dto);
 
 
     /**
      * Upraví informace o stávajícím klientovi
-     * @param dto {@link ClientEditDTO}
+     * @param dto {@link UserEditDTO}
      */
-    void editClient (ClientEditDTO dto);
+    void edit(UserEditDTO dto);
 
     /**
      * Získá informace o klientovi dle jeho identifikátoru
      * @param id Identifikátor klienta
-     * @return {@link ClientDisplayDTO}
+     * @return {@link UserDisplayDTO}
      */
-    ClientDisplayDTO getClientById (long id);
+    UserDisplayDTO getById(long id);
 
     /**
      * Získá všechny záznamy o klientech
-     * @return záznamy ve formátu {@link ClientDisplayDTO}
+     * @return záznamy ve formátu {@link project.models.dtos.UserDisplayDTO}
      */
-    List<ClientDisplayDTO> getAllClients();
+    List<UserDisplayDTO> getAll();
 
     /**
      * Odstraní záznam o klientovi z databáze
      * @param id
      */
-    void deleteClient (long id);
+    void remove(long id);
 
     /**
      * Vypočte věk dle zadaného data narození
      * @param dateOfBirth Datum narození
      * @return Věk
      */
-    int calculateAge (LocalDate dateOfBirth);
+    int getAge(LocalDate dateOfBirth);
 
 
 

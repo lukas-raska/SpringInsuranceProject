@@ -6,8 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import project.data.entities.ClientEntity;
-import project.models.dtos.ClientDisplayDTO;
-import project.models.dtos.mappers.ClientMapper;
+import project.data.entities.EmployeeEntity;
+import project.models.dtos.UserDisplayDTO;
+import project.models.dtos.mappers.UserMapper;
 import project.models.services.AuthenticationService;
 
 import java.util.Optional;
@@ -18,34 +19,44 @@ import java.util.Optional;
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
+
     @Autowired
     private AuthenticationService authenticationService;
 
     @Autowired
-    private ClientMapper clientMapper;
+    private UserMapper userMapper;
 
     /**
      * Slouží k předání informace o přihlášeném uživateli do šablony, či fragmentu
+     *
      * @param model
      */
     @ModelAttribute
-    public void loggedInUser(Model model) {
+    public void renderloggedInUser(Model model) {
 
         //získání detailů o přihlášeném uživateli
         Optional<UserDetails> loggedIn = authenticationService.getLoggedInEntity();
-        String text = "";
-
+        String entityName = "";
+        String renderedText = "";
+        UserDisplayDTO loggedInUser = new UserDisplayDTO();
         //pokud je uživatel přihlášen
         if (loggedIn.isPresent()) {
-            //pokud je přihlášen klient
+            //pokud je přihlášeným klient
             if (loggedIn.get() instanceof ClientEntity) {
                 //převedu na příslušné DTO
-                ClientDisplayDTO loggedInClient = clientMapper.entityToDTO((ClientEntity) loggedIn.get());
-                //upravím text pro předání do šablony
-                text = "Přihlášen klient: " + loggedInClient.getFirstName() + " " + loggedInClient.getLastName();
+                loggedInUser = userMapper.mapToDTO((ClientEntity) loggedIn.get());
+                entityName = "klient";
+
             }
+            //pokud je přihlášeným zaměstnanec
+            if (loggedIn.get() instanceof EmployeeEntity) {
+                loggedInUser = userMapper.mapToDTO((EmployeeEntity) loggedIn.get());
+                entityName = "zaměstnanec";
+            }
+            //sestavení vypisovaného textu
+            renderedText = "Přihlášen " + entityName + ": " + loggedInUser.getFirstName() + " " + loggedInUser.getLastName();
         }
-        //předání do šablony
-        model.addAttribute("loggedInUser", text);
+        //předání nápisu šabloně
+        model.addAttribute("loggedInUser", renderedText);
     }
 }

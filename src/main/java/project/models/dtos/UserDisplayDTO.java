@@ -1,15 +1,11 @@
 package project.models.dtos;
 
 import lombok.Data;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
-/**
- * Data transfer object (DTO) pro zobrazování dat týkající se klienta
- */
 @Data
-public class ClientDisplayDTO {
+public class UserDisplayDTO {
 
     private long id;
     private String firstName;

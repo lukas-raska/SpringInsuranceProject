@@ -3,7 +3,6 @@ package project.models.services;
 import project.models.dtos.InsuranceDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Rozhraní služby pro operace týkající se pojistek

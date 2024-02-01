@@ -1,25 +1,29 @@
 package project.controllers;
 
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.data.entities.ClientEntity;
-import project.models.dtos.ClientDisplayDTO;
-import project.models.dtos.ClientEditDTO;
-import project.models.dtos.client.ClientRegisterDTO;
-import project.models.dtos.mappers.ClientMapper;
+import project.models.dtos.InsuranceDTO;
+import project.models.dtos.UserDisplayDTO;
+import project.models.dtos.UserEditDTO;
+import project.models.dtos.UserRegisterDTO;
+import project.models.dtos.mappers.UserMapper;
 import project.models.exceptions.ClientNotFoundException;
 import project.models.exceptions.DuplicateEmailException;
-import project.models.exceptions.InsuranceNotFoundException;
 import project.models.exceptions.PasswordDoNotEqualException;
 import project.models.services.AuthenticationService;
 import project.models.services.ClientService;
 import project.models.services.InsuranceService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -39,7 +43,7 @@ public class ClientController {
     private AuthenticationService authenticationService;
 
     @Autowired
-    private ClientMapper clientMapper;
+    private UserMapper userMapper;
 
     /**
      * Zobrazí formulář pro registraci nového klienta
@@ -48,7 +52,7 @@ public class ClientController {
      * @return Název šablony pro zobrazení formuláře
      */
     @GetMapping("/register")
-    public String renderRegisterForm(@ModelAttribute ClientRegisterDTO dto) {
+    public String renderRegisterForm(@ModelAttribute UserRegisterDTO dto) {
         return "pages/client/register";
     }
 
@@ -64,7 +68,7 @@ public class ClientController {
      */
     @PostMapping("/register")
     public String registerNewClient(
-            @Valid @ModelAttribute ClientRegisterDTO dto,
+            @ModelAttribute UserRegisterDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model model
@@ -76,7 +80,7 @@ public class ClientController {
 
         try {
             //pokusí se vytvořit nového klienta
-            clientService.createNewClient(dto);
+            clientService.create(dto);
 
             //ošetření chyby duplicity emailu
         } catch (DuplicateEmailException exception) {
@@ -105,15 +109,19 @@ public class ClientController {
     @GetMapping("/myDetail")
     public String renderLoggedClientDetail(Model model
     ) {
-        ClientDisplayDTO dto = new ClientDisplayDTO();
+        UserDisplayDTO clientDetail = new UserDisplayDTO();
+        List<InsuranceDTO> clientsInsurances = new ArrayList<>();
 
         //získání dat o přihlášeném klientoví a převedení na DTO
-        Optional<ClientEntity> client = authenticationService.getLoggedInEntity();
-        if (client.isPresent()) {
-            dto = clientMapper.entityToDTO(client.get());
+        Optional<UserDetails> user = authenticationService.getLoggedInEntity();
+        if (user.isPresent() && user.get() instanceof ClientEntity) {
+            clientDetail = userMapper.mapToDTO((ClientEntity) user.get());
         }
+        clientsInsurances = insuranceService.getInsurancesByClientId(clientDetail.getId());
+
         //předání do šablony
-        model.addAttribute("clientDTO", dto);
+        model.addAttribute("clientDTO", clientDetail);
+        model.addAttribute("clientInsurances", clientsInsurances);
 
         return "pages/client/detail";
     }
@@ -130,7 +138,7 @@ public class ClientController {
             @PathVariable(name = "clientId") Long clientId,
             Model model
     ) {
-        model.addAttribute("clientDTO", clientService.getClientById(clientId));
+        model.addAttribute("clientDTO", clientService.getById(clientId));
         model.addAttribute("clientInsurances", insuranceService.getInsurancesByClientId(clientId));
         return "pages/client/detail";
 
@@ -144,21 +152,21 @@ public class ClientController {
      */
     @GetMapping("/list")
     public String renderAllClientsList(Model model) {
-        model.addAttribute("allClientsList", clientService.getAllClients());
+        model.addAttribute("allClientsList", clientService.getAll());
         return "pages/client/list";
     }
 
     @GetMapping("/edit/{clientId}")
     public String renderEditForm(
             @PathVariable(name = "clientId") Long clientId,
-            ClientEditDTO dto
+            UserEditDTO dto
 
     ) {
         //načtu data klienta k předvyplnění formuláře
-        ClientDisplayDTO fetchedClient = clientService.getClientById(clientId);
+        UserDisplayDTO fetchedClient = clientService.getById(clientId);
 
         //načtenými daty updatuju dto předávané metodou controlleru
-        clientMapper.updateClientDTO(fetchedClient, dto);
+        userMapper.updateClientDTO(fetchedClient, dto);
 
 
         return "pages/client/edit";
@@ -168,7 +176,7 @@ public class ClientController {
     @PostMapping("/edit/{clientId}")
     public String editClient(
             @PathVariable(name = "clientId") Long clientId,
-            @Valid @ModelAttribute ClientEditDTO dto,
+            @Valid @ModelAttribute UserEditDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
@@ -179,7 +187,7 @@ public class ClientController {
         }
 
         dto.setId(clientId);
-        clientService.editClient(dto);
+        clientService.edit(dto);
 
         redirectAttributes.addFlashAttribute("successEdit", "Úprava údajů proběhla úspěšně.");
 
@@ -190,8 +198,8 @@ public class ClientController {
     public String deleteClient(
             @PathVariable(name = "clientId") Long clientId,
             RedirectAttributes redirectAttributes
-    ){
-        clientService.deleteClient(clientId);
+    ) {
+        clientService.remove(clientId);
         redirectAttributes.addFlashAttribute("successDelete", "Klient odstraněn.");
 
         return "redirect:/";
