@@ -3,6 +3,7 @@ package project.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -106,6 +107,7 @@ public class ClientController {
      * @return Název šablony pro zobrazení stránky s detailem
      */
     @GetMapping("/myDetail")
+    @Secured("ROLE_CLIENT")
     public String renderLoggedInClientDetail(Model model) {
 
         UserDisplayDTO clientDetail = new UserDisplayDTO();
@@ -133,6 +135,7 @@ public class ClientController {
      * @return Šablonu pro zobrazení stránky
      */
     @GetMapping("{clientId}")
+    @Secured({"ROLE_EMPLOYEE", "ROLE_ADMIN"})
     public String renderCustomClientDetail(
             @PathVariable(name = "clientId") Long clientId,
             Model model
@@ -150,6 +153,7 @@ public class ClientController {
      * @return Šablonu pro zobrazení stránky
      */
     @GetMapping("/list")
+    @Secured({"ROLE_EMPLOYEE", "ROLE_ADMIN"})
     public String renderAllClientsList(Model model) {
         model.addAttribute("allClientsList", clientService.getAll());
         return "pages/client/list";
@@ -163,6 +167,7 @@ public class ClientController {
      * @return - šablonu s formulářem
      */
     @GetMapping("/edit/{clientId}")
+    @Secured({"ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_CLIENT"})
     public String renderEditForm(
             @PathVariable(name = "clientId") Long clientId,
             UserEditDTO dto
@@ -186,6 +191,7 @@ public class ClientController {
      * @return - přesměrování na požadvanou adresu
      */
     @PostMapping("/edit/{clientId}")
+    @Secured({"ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_CLIENT"})
     public String editClient(
             @PathVariable(name = "clientId") Long clientId,
             @Valid @ModelAttribute UserEditDTO dto,
@@ -212,6 +218,7 @@ public class ClientController {
      * @return - přesměrování na požadovanou URL
      */
     @PostMapping("/delete/{clientId}")
+    @Secured({"ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_CLIENT"})
     public String deleteClient(
             @PathVariable(name = "clientId") Long clientId,
             RedirectAttributes redirectAttributes

@@ -21,7 +21,7 @@ public class EmployeeEntity extends BaseUserEntity {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_ " + (this.isAdmin() ? "ADMIN" : "EMPLOYEE"));
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + (this.isAdmin() ? "ADMIN" : "EMPLOYEE"));
         return List.of(authority);
     }
 }

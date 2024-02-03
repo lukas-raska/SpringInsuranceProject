@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head th:fragment="head(pageTitle)">
     <meta charset="UTF-8">
@@ -25,30 +25,34 @@
                          th:src="@{/images/logo_min.png}"
                          alt="logo" id="logo"/></a>
             </li>
-            <li class="nav-item">
-                <a                    th:href="@{/client/list}"
+            <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')"
+                class="nav-item">
+                <a th:href="@{/client/list}"
                    class="nav-link ">Přehled klientů</a>
             </li>
-            <li class="nav-item">
-                <a                    th:href="@{/employee/list}"
+            <li sec:authorize="hasRole('ADMIN')"
+                class="nav-item">
+                <a th:href="@{/employee/list}"
                    class="nav-link ">Přehled zaměstnanců</a>
             </li>
-            <li class="nav-item">
-                <a href="#"
-                   th:href="@{/insurance/list}"
+            <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')"
+                class="nav-item">
+                <a th:href="@{/insurance/list}"
                    class="nav-link ">Přehled pojistných smluv</a>
             </li>
-            <li class="nav-item">
-                <a href="#"
-                   th:href="@{/client/myDetail}" class="nav-link ">Můj přehled</a>
+            <li sec:authorize="hasAnyRole('ADMIN','CLIENT', 'EMPLOYEE')"
+                class="nav-item">
+                <a th:href="@{/client/myDetail}"
+                   class="nav-link ">Můj přehled</a>
+            </li>
+            <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')"
+                class="nav-item">
+                <a th:href="@{/employee/myDetail}"
+                   class="nav-link ">Můj přehled (Z)</a>
             </li>
             <li class="nav-item">
-                <a href="#"
-                   th:href="@{/employee/myDetail}" class="nav-link ">Můj přehled (Z)</a>
-            </li>
-            <li class="nav-item">
-                <a href="#"
-                   th:href="@{/about}" class="nav-link ">O aplikaci</a>
+                <a th:href="@{/about}"
+                   class="nav-link ">O aplikaci</a>
             </li>
         </ul>
 
@@ -57,20 +61,24 @@
             <li class="nav-item"
                 th:text="${loggedInUser}">
             </li>
-            <li class="nav-item">
-                <a href="#"
-                   th:href="@{/login}"
+            <li sec:authorize="isAnonymous()"
+                class="nav-item">
+                <a th:href="@{/login}"
                    class="nav-link ">Přihlášení</a>
             </li>
-            <li class="nav-item">
-                <a                    th:href="@{/client/register}"
+            <li sec:authorize="isAnonymous()"
+                class="nav-item">
+                <a th:href="@{/client/register}"
                    class="nav-link ">Registrace</a>
             </li>
-            <li class="nav-item">
-                <a                    th:href="@{/employee/register}"
+            <li sec:authorize="hasRole('ADMIN')"
+                class="nav-item">
+                <a th:href="@{/employee/register}"
                    class="nav-link ">Nový zaměstnanec</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+
+
                 <form th:action="@{/logout}"
                       method="post">
                     <button type="submit"

@@ -2,6 +2,7 @@ package project.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,23 +30,27 @@ public class InsuranceController {
 
     /**
      * Vykreslí formulář pro tvorbu nového pojištění
+     *
      * @param dto {@link InsuranceDTO}
      * @return Šablonu s formulářem
      */
     @GetMapping("/client/{clientId}/insurance/new")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_CLIENT"})
     public String renderNewInsuranceForm(@ModelAttribute InsuranceDTO dto) {
         return "pages/insurance/new";
     }
 
     /**
      * Zpracuje požadavek na vytvoření nové pojistky
-     * @param clientId - Identifikátor klienta (přijatý z URL)
-     * @param dto - {@link InsuranceDTO} - objekt s daty vyplněnými ve formuláři
-     * @param result - {@link BindingResult} - objekt pro práci s výsledky validace formuláře
+     *
+     * @param clientId           - Identifikátor klienta (přijatý z URL)
+     * @param dto                - {@link InsuranceDTO} - objekt s daty vyplněnými ve formuláři
+     * @param result             - {@link BindingResult} - objekt pro práci s výsledky validace formuláře
      * @param redirectAttributes - slouží pro přidání flash zpráv po vytvoření
      * @return Po odeslání přesměruje na zvolenou adresu
      */
     @PostMapping("/client/{clientId}/insurance/new")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_CLIENT"})
     public String createNewInsurance(
             @PathVariable(name = "clientId") Long clientId,
             @Valid @ModelAttribute InsuranceDTO dto,
@@ -70,6 +75,7 @@ public class InsuranceController {
     }
 
     @GetMapping("insurance/list")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public String renderAllInsurances(Model model) {
         List<InsuranceDTO> allInsurances = insuranceService.getAllInsurances();
 
@@ -78,6 +84,7 @@ public class InsuranceController {
     }
 
     @GetMapping("insurance/{insuranceId}")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE", "ROLE_CLIENT"})
     public String renderInsuranceDetail(
             @PathVariable(name = "insuranceId") Long insuranceId,
             Model model
@@ -90,37 +97,34 @@ public class InsuranceController {
     }
 
     @GetMapping("/insurance/{insuranceId}/edit")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public String renderEditForm(
             @PathVariable(name = "insuranceId") Long insuranceId,
             @ModelAttribute InsuranceDTO dto
     ) {
-        System.out.println("Metoda renderEditForm volána.");
         //předvyplnění formuláře - načtu data o pojistce z db a překopíruju do dto ve formuláři
         InsuranceDTO dtoToEdit = insuranceService.getInsuranceById(insuranceId);
-        System.out.println("DTO to edit: " + dtoToEdit);
-        System.out.println("dto formuláře před updatem: " + dto);
         insuranceMapper.updateInsuranceDTO(dtoToEdit, dto);
-        System.out.println("dto formuláře po updatu: " + dto);
+
         return "pages/insurance/editForm";
     }
 
     @PostMapping("/insurance/{insuranceId}/edit")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public String editInsurance(
             @PathVariable(name = "insuranceId") Long insuranceId,
             @Valid @ModelAttribute InsuranceDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
-        System.out.println("\nMetoda edit insurance volána.");
+
         if (result.hasErrors()) {
-            System.out.println("Zjištěny vallidační chyby:");
-            System.out.println(result.getAllErrors());
-            return renderEditForm(insuranceId, dto);
+               return renderEditForm(insuranceId, dto);
         }
-        System.out.println("DTO před editací: " + dto);
+
         dto.setId(insuranceId);
         insuranceService.editInsurance(dto);
-        System.out.println("DTO po editaci: " + dto);
+
 
         redirectAttributes.addFlashAttribute("successInsuranceEdit", "Údaje změněny");
 

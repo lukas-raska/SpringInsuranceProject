@@ -2,6 +2,7 @@ package project.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,6 +49,7 @@ public class EmployeeController {
      * @return - vrací cestu k šabloně s formulářem
      */
     @GetMapping("/register")
+    @Secured("ROLE_ADMIN")
     public String renderRegisterForm(@ModelAttribute UserRegisterDTO dto) {
         return "pages/employee/register";
     }
@@ -61,6 +63,7 @@ public class EmployeeController {
      * @return - přesměrování na požadovanou URL
      */
     @PostMapping("/register")
+    @Secured("ROLE_ADMIN")
     public String registerNewEmployee(
             @Valid @ModelAttribute UserRegisterDTO dto,
             BindingResult result,
@@ -95,6 +98,7 @@ public class EmployeeController {
      * @return - vrací cestu k šabloně
      */
     @GetMapping("/list")
+    @Secured("ROLE_ADMIN")
     public String renderAllEmployeesList(Model model) {
         //načtení údajů z databáze
         List<UserDisplayDTO> allEmployees = employeeService.getAll();
@@ -111,6 +115,7 @@ public class EmployeeController {
      * @return - cestu k šabloně
      */
     @GetMapping("/myDetail")
+    @Secured({"ROLE_EMPLOYEE", "ROLE_ADMIN"})
     public String renderLoggedInEmployee(Model model) {
 
         UserDisplayDTO employeeDetail = new UserDisplayDTO();
@@ -134,6 +139,7 @@ public class EmployeeController {
      * @return Šablonu pro zobrazení stránky
      */
     @GetMapping("{employeeId}")
+    @Secured("ROLE_ADMIN")
     public String renderCustomEmployeeDetail(
             @PathVariable(name = "employeeId") Long employeeId,
             Model model
@@ -145,6 +151,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/edit/{employeeId}")
+    @Secured("ROLE_ADMIN")
     public String renderEditForm(
             @PathVariable(name = "employeeId") Long employeeId,
             UserEditDTO dto
@@ -159,6 +166,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/edit/{employeeId}")
+    @Secured("ROLE_ADMIN")
     public String editEmployee(
             @PathVariable(name = "employeeId") Long employeeId,
             @Valid @ModelAttribute UserEditDTO dto,
@@ -179,6 +187,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/delete/{employeeId}")
+    @Secured("ROLE_ADMIN")
     public String deleteEmployee(
             @PathVariable(name = "employeeId") Long employeeId,
             RedirectAttributes redirectAttributes
