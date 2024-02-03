@@ -40,15 +40,15 @@
                 <a th:href="@{/insurance/list}"
                    class="nav-link ">Přehled pojistných smluv</a>
             </li>
-            <li sec:authorize="hasAnyRole('ADMIN','CLIENT', 'EMPLOYEE')"
+            <li sec:authorize="hasRole('CLIENT')"
                 class="nav-item">
                 <a th:href="@{/client/myDetail}"
                    class="nav-link ">Můj přehled</a>
             </li>
-            <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')"
+            <li sec:authorize="hasRole('EMPLOYEE')"
                 class="nav-item">
                 <a th:href="@{/employee/myDetail}"
-                   class="nav-link ">Můj přehled (Z)</a>
+                   class="nav-link ">Můj přehled</a>
             </li>
             <li class="nav-item">
                 <a th:href="@{/about}"

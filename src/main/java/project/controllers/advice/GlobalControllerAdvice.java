@@ -59,4 +59,6 @@ public class GlobalControllerAdvice {
         //předání nápisu šabloně
         model.addAttribute("loggedInUser", renderedText);
     }
+
+
 }

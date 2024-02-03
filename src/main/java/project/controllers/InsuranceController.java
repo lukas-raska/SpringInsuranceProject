@@ -8,13 +8,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.data.entities.ClientEntity;
 import project.models.dtos.InsuranceDTO;
 import project.models.dtos.mappers.InsuranceMapper;
 import project.models.exceptions.InsuranceNotFoundException;
 import project.models.exceptions.WrongInsuranceDatesException;
+import project.models.services.AuthenticationService;
+import project.models.services.ClientService;
 import project.models.services.InsuranceService;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller pro manipulaci s Insurance
@@ -27,6 +32,12 @@ public class InsuranceController {
 
     @Autowired
     private InsuranceMapper insuranceMapper;
+
+    @Autowired
+    private ClientService clientService;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     /**
      * Vykreslí formulář pro tvorbu nového pojištění
@@ -61,16 +72,24 @@ public class InsuranceController {
         if (result.hasErrors()) {
             return renderNewInsuranceForm(dto);
         }
+        //pokud o uložení do databáze
         try {
-            dto.setClientId(clientId);
             insuranceService.newInsurance(dto);
+            //zachycení výjimky v případě chybně zadaného data
         } catch (WrongInsuranceDatesException e) {
             result.rejectValue("insuranceStart", "error", "Konec pojištění nelze stanovit před jeho počátkem");
             result.rejectValue("insuranceEnd", "error", "Konec pojištění nelze stanovit před jeho počátkem");
-            return "pages/insurance/new";
+            return renderNewInsuranceForm(dto);
         }
+        //flash zpráva při přesměrování
         redirectAttributes.addFlashAttribute("newInsuranceCreated", "Pojistná smlouva vytvořena.");
 
+        //pokud je klient přihlášen, přesměruji na jeho osobní stránku
+        Optional<ClientEntity> loggedInClient = authenticationService.getLoggedInEntity();
+        if (loggedInClient.isPresent() && loggedInClient.get().getId().equals(clientId)) {
+            return "redirect:/client/myDetail";
+        }
+        //jinak do detailu klienta dle ID
         return "redirect:/client/{clientId}";
     }
 
@@ -119,7 +138,7 @@ public class InsuranceController {
     ) {
 
         if (result.hasErrors()) {
-               return renderEditForm(insuranceId, dto);
+            return renderEditForm(insuranceId, dto);
         }
 
         dto.setId(insuranceId);
