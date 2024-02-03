@@ -52,6 +52,11 @@ public interface UserMapper {
      */
     UserDisplayDTO mapToDTO(ClientEntity source);
 
+    /**
+     * Mapuje objekt {@link EmployeeEntity} na {@link UserDisplayDTO}
+     * @param source - {@link EmployeeEntity}
+     * @return - {@link UserDisplayDTO}
+     */
     UserDisplayDTO mapToDTO(EmployeeEntity source);
 
 
@@ -79,4 +84,11 @@ public interface UserMapper {
      * @param target {@link UserEditDTO}
      */
     void updateClientEntity(UserEditDTO source, @MappingTarget ClientEntity target);
+
+    /**
+     * Aktualizuje objekt {@link EmployeeEntity} pomocí zdrojového DTO {@link UserEditDTO}
+     * @param source - {@link UserEditDTO}
+     * @param target - {@link EmployeeEntity}
+     */
+    void updateEmployeeEntity(UserEditDTO source, @MappingTarget EmployeeEntity target);
 }

@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+/**
+ * Slouží pro zobrazování dat o uživatelských entitách načtených z databáze
+ */
 @Data
 public class UserDisplayDTO {
 

@@ -1,6 +1,7 @@
 package project.models.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,7 @@ import java.util.List;
 public class ClientServiceImpl implements ClientService {
 
     @Autowired
+    @Qualifier("clientRepository")
     private ClientRepository clientRepository;
 
     @Autowired
@@ -37,6 +39,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    
 
     /**
      * Vytvoří nové klienta
@@ -75,6 +79,7 @@ public class ClientServiceImpl implements ClientService {
         ClientEntity fetchedClient = clientRepository
                 .findById(dto.getId())
                 .orElseThrow(ClientNotFoundException::new);
+
         userMapper.updateClientEntity(dto, fetchedClient);
         clientRepository.save(fetchedClient);
     }

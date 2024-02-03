@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout.html :: head('Přehled pojistných smluv')}"></head>
+<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+
+<body>
+
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<!--flash messages-->
+<div th:if="${insuranceNotFound}" th:text="${insuranceNotFound}" class=" text-center bg-danger text-white "></div>
+<div th:if="${successInsuranceEdit}" th:text="${successInsuranceEdit}" class=" text-center success text-white "></div>
+<!--flash messages-->
+
+<article class="container ">
+    <header>
+        <h1 class="mt-4">
+            Přehled pojistných smluv
+        </h1>
+    </header>
+
+    <section>
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th>Jméno klienta</th>
+                <th>Typ smlouvy</th>
+                <th>Pojistná částka</th>
+                <th>Datum vytvoření</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="insurance : ${allInsurances}">
+                <td th:text="${insurance.insuredClient.firstName} + ' ' + ${insurance.insuredClient.lastName}"></td>
+                <td th:text="${insurance.insuranceType.description}"></td>
+                <td th:text="${insurance.amountOfInsurance}">30</td>
+                <td th:text=${insurance.dateOfRegistry}></td>
+                <td class="text-end ">
+                    <a th:href="@{'/insurance/' + ${insurance.id}}" class="btn btn-outline-info  ">Detail</a>
+                    <a th:href="@{'/insurance/' + ${insurance.id} + '/edit'}" class="btn btn-outline-dark     ">Upravit</a>
+                    <a th:href="@{#}" class="btn btn-outline-danger">Smazat</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</article>
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+
+</body>
+
+</html>

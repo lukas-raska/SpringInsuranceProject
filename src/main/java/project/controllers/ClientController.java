@@ -22,7 +22,6 @@ import project.models.services.AuthenticationService;
 import project.models.services.ClientService;
 import project.models.services.InsuranceService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +67,7 @@ public class ClientController {
      */
     @PostMapping("/register")
     public String registerNewClient(
-            @ModelAttribute UserRegisterDTO dto,
+            @Valid @ModelAttribute UserRegisterDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model model
@@ -107,17 +106,17 @@ public class ClientController {
      * @return Název šablony pro zobrazení stránky s detailem
      */
     @GetMapping("/myDetail")
-    public String renderLoggedClientDetail(Model model
-    ) {
+    public String renderLoggedInClientDetail(Model model) {
+
         UserDisplayDTO clientDetail = new UserDisplayDTO();
-        List<InsuranceDTO> clientsInsurances = new ArrayList<>();
 
         //získání dat o přihlášeném klientoví a převedení na DTO
         Optional<UserDetails> user = authenticationService.getLoggedInEntity();
         if (user.isPresent() && user.get() instanceof ClientEntity) {
             clientDetail = userMapper.mapToDTO((ClientEntity) user.get());
         }
-        clientsInsurances = insuranceService.getInsurancesByClientId(clientDetail.getId());
+        //získání všech pojistek klienta
+        List<InsuranceDTO> clientsInsurances = insuranceService.getInsurancesByClientId(clientDetail.getId());
 
         //předání do šablony
         model.addAttribute("clientDTO", clientDetail);
@@ -140,8 +139,8 @@ public class ClientController {
     ) {
         model.addAttribute("clientDTO", clientService.getById(clientId));
         model.addAttribute("clientInsurances", insuranceService.getInsurancesByClientId(clientId));
-        return "pages/client/detail";
 
+        return "pages/client/detail";
     }
 
     /**
@@ -156,11 +155,17 @@ public class ClientController {
         return "pages/client/list";
     }
 
+    /**
+     * Zobrazí formulář pro editaci klienta
+     *
+     * @param clientId - identifikátor klienta
+     * @param dto      - {@link UserEditDTO}
+     * @return - šablonu s formulářem
+     */
     @GetMapping("/edit/{clientId}")
     public String renderEditForm(
             @PathVariable(name = "clientId") Long clientId,
             UserEditDTO dto
-
     ) {
         //načtu data klienta k předvyplnění formuláře
         UserDisplayDTO fetchedClient = clientService.getById(clientId);
@@ -168,11 +173,18 @@ public class ClientController {
         //načtenými daty updatuju dto předávané metodou controlleru
         userMapper.updateClientDTO(fetchedClient, dto);
 
-
         return "pages/client/edit";
     }
 
-
+    /**
+     * Zpracuje požadavek na editaci klienta
+     *
+     * @param clientId           - identifikátor klienta
+     * @param dto                - data z formuláře {@link UserEditDTO}
+     * @param result             - objekt {@link BindingResult} pro zachytávání validačních chyb
+     * @param redirectAttributes - pro vytváření flash zpráv při přesměrování
+     * @return - přesměrování na požadvanou adresu
+     */
     @PostMapping("/edit/{clientId}")
     public String editClient(
             @PathVariable(name = "clientId") Long clientId,
@@ -182,11 +194,10 @@ public class ClientController {
     ) {
         //kontrola validace - v případě chyb opětovné vykreslení formuláře + chybových hlášek (viz šablona)
         if (result.hasErrors()) {
-            System.out.println("Chyby: " + result);
-            return "pages/client/edit";
+            return renderEditForm(clientId, dto);
         }
 
-        dto.setId(clientId);
+        dto.setId(clientId); //nutné nastavit hodnotou z URL
         clientService.edit(dto);
 
         redirectAttributes.addFlashAttribute("successEdit", "Úprava údajů proběhla úspěšně.");
@@ -194,12 +205,19 @@ public class ClientController {
         return "redirect:/";
     }
 
+    /**
+     * Zpracuje požadavek na mazání klienta
+     * @param clientId - identifikátor klienta
+     * @param redirectAttributes - pro vytváření flash zpráv při přesměrování
+     * @return - přesměrování na požadovanou URL
+     */
     @PostMapping("/delete/{clientId}")
     public String deleteClient(
             @PathVariable(name = "clientId") Long clientId,
             RedirectAttributes redirectAttributes
     ) {
         clientService.remove(clientId);
+
         redirectAttributes.addFlashAttribute("successDelete", "Klient odstraněn.");
 
         return "redirect:/";

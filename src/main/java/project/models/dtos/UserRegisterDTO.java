@@ -6,6 +6,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
+/**
+ * Data transfer object (DTO) sloužící pro přenos dat z registračního formuláře User entit
+ */
 @Data
 public class UserRegisterDTO {
 

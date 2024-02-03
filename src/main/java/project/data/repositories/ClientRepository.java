@@ -1,6 +1,7 @@
 package project.data.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import project.data.entities.ClientEntity;
 
 import java.util.Optional;
@@ -8,6 +9,7 @@ import java.util.Optional;
 /**
  * Rozhraní pro práci s databázovou vrstvou pro {@ClientEntity}
  */
+@Repository
 public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
 
     /**

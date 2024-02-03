@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Rozhraní pro službu pracující s klienty
  */
-public interface ClientService {//extends UserDetailsService
+public interface ClientService {
 
 
     /**
@@ -52,12 +52,6 @@ public interface ClientService {//extends UserDetailsService
      * @return Věk
      */
     int getAge(LocalDate dateOfBirth);
-
-
-
-
-
-
 
 
 
