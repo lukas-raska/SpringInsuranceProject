@@ -107,9 +107,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         return userMapper.mapToDTO(fetchedEmployee);
     }
 
+    /**
+     * Slouží k odstranění záznamu o zaměstnanci z databáze
+     * @param id - identifikátor zaměstance
+     */
     @Override
     public void remove(long id) {
-
+        employeeRepository.deleteById(id);
     }
 
     @Override

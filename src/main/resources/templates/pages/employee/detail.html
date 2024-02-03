@@ -54,11 +54,11 @@
     <div class="container border my-2">
         <div class="row d-flex justify-content-between  ">
             <div class="col-sm text-center">
-                <a th:href="@{'/client/edit/' + *{id}}" class="btn btn-outline-info col  m-2">Změnit osobní
+                <a th:href="@{'/employee/edit/' + *{id}}" class="btn btn-outline-info col  m-2">Změnit osobní
                     údaje</a>
             </div>
             <div class="col-sm text-center ">
-                <form th:action="@{'/client/delete/' + *{id}}"
+                <form th:action="@{'/employee/delete/' + *{id}}"
                       th:method="post">
                     <button class="btn btn-outline-danger"
                             type="submit">

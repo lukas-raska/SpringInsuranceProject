@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.data.entities.EmployeeEntity;
 import project.models.dtos.UserDisplayDTO;
+import project.models.dtos.UserEditDTO;
 import project.models.dtos.UserRegisterDTO;
 import project.models.dtos.mappers.UserMapper;
+import project.models.exceptions.ClientNotFoundException;
 import project.models.exceptions.DuplicateEmailException;
+import project.models.exceptions.EmployeeNotFoundException;
 import project.models.exceptions.PasswordDoNotEqualException;
 import project.models.services.AuthenticationService;
 import project.models.services.ClientService;
@@ -140,5 +143,58 @@ public class EmployeeController {
 
         return "pages/employee/detail";
     }
+
+    @GetMapping("/edit/{employeeId}")
+    public String renderEditForm(
+            @PathVariable(name = "employeeId") Long employeeId,
+            UserEditDTO dto
+    ) {
+        //načtu data klienta k předvyplnění formuláře
+        UserDisplayDTO fetchedEmployee = employeeService.getById(employeeId);
+
+        //načtenými daty updatuju dto předávané metodou controlleru
+        userMapper.updateUserDTO(fetchedEmployee, dto);
+
+        return "pages/employee/edit";
+    }
+
+    @PostMapping("/edit/{employeeId}")
+    public String editEmployee(
+            @PathVariable(name = "employeeId") Long employeeId,
+            @Valid @ModelAttribute UserEditDTO dto,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ) {
+        //kontrola validace - v případě chyb opětovné vykreslení formuláře + chybových hlášek (viz šablona)
+        if (result.hasErrors()) {
+            return renderEditForm(employeeId, dto);
+        }
+
+        dto.setId(employeeId); //nutné nastavit hodnotou z URL
+        employeeService.edit(dto);
+
+        redirectAttributes.addFlashAttribute("successEdit", "Úprava údajů proběhla úspěšně.");
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/delete/{employeeId}")
+    public String deleteEmployee(
+            @PathVariable(name = "employeeId") Long employeeId,
+            RedirectAttributes redirectAttributes
+    ) {
+        employeeService.remove(employeeId);
+
+        redirectAttributes.addFlashAttribute("successDelete", "Zaměstnanec odstraněn.");
+
+        return "redirect:/";
+    }
+
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public String handleEmployeeNotFoundException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("employeeNotFound", "Zaměstnanec nenalezen");
+        return "redirect:/employee/list";
+    }
+
 }
 

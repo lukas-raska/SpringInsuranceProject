@@ -171,7 +171,7 @@ public class ClientController {
         UserDisplayDTO fetchedClient = clientService.getById(clientId);
 
         //načtenými daty updatuju dto předávané metodou controlleru
-        userMapper.updateClientDTO(fetchedClient, dto);
+        userMapper.updateUserDTO(fetchedClient, dto);
 
         return "pages/client/edit";
     }

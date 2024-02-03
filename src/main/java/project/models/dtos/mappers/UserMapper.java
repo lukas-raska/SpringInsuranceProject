@@ -66,7 +66,7 @@ public interface UserMapper {
      * @param source {@link UserEditDTO}
      * @param target {@link UserEditDTO}
      */
-    void updateClientDTO(UserEditDTO source, @MappingTarget UserEditDTO target);
+    void updateUserDTO(UserEditDTO source, @MappingTarget UserEditDTO target);
 
     /**
      * Aktualizuje {@link UserEditDTO} pomocí hodnot z jiného {@link UserDisplayDTO}
@@ -74,7 +74,7 @@ public interface UserMapper {
      * @param source {@link UserDisplayDTO}
      * @param target {@link UserEditDTO}
      */
-    void updateClientDTO(UserDisplayDTO source, @MappingTarget UserEditDTO target);
+    void updateUserDTO(UserDisplayDTO source, @MappingTarget UserEditDTO target);
 
 
     /**
