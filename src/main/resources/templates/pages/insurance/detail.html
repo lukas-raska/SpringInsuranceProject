@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head th:replace="~{fragments/layout.html :: head('Detail pojistné smlouvy')}"></head>
 <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
@@ -20,7 +20,15 @@
         <div class="row py-2">
             <div class="ms-5">
                 <h6>Klient: </h6>
-                <a th:href="@{'/client/' + *{insuredClient.id}}">
+                <a sec:authorize="hasRole('CLIENT')"
+                        th:href="@{/client/myDetail}">
+                    <p>
+                        <span  th:text="*{insuredClient.firstName}"></span>
+                        <span  th:text="*{insuredClient.lastName}"></span>
+                    </p>
+                </a>
+                <a sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')"
+                   th:href="@{'/client/' + *{insuredClient.id}}">
                     <p>
                         <span  th:text="*{insuredClient.firstName}"></span>
                         <span  th:text="*{insuredClient.lastName}"></span>

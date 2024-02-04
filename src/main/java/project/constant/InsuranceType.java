@@ -1,4 +1,4 @@
-package project.data.entities.insurance;
+package project.constant;
 
 import lombok.Getter;
 

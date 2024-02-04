@@ -11,4 +11,9 @@ public interface AuthenticationService extends UserDetailsService {
 
 
     <T extends UserDetails> Optional<T> getLoggedInEntity();
+
+
+    java.lang.String getLoggedInUserName();
+
+    String getLoggedInUserRole();
 }

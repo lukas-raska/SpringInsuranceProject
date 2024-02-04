@@ -1,8 +1,10 @@
 package project.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -116,7 +118,7 @@ public class InsuranceController {
     }
 
     @GetMapping("/insurance/{insuranceId}/edit")
-    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
+    //@Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public String renderEditForm(
             @PathVariable(name = "insuranceId") Long insuranceId,
             @ModelAttribute InsuranceDTO dto
@@ -129,12 +131,13 @@ public class InsuranceController {
     }
 
     @PostMapping("/insurance/{insuranceId}/edit")
-    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
+  //  @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public String editInsurance(
             @PathVariable(name = "insuranceId") Long insuranceId,
             @Valid @ModelAttribute InsuranceDTO dto,
             BindingResult result,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            HttpServletRequest request
     ) {
 
         if (result.hasErrors()) {
@@ -147,12 +150,38 @@ public class InsuranceController {
 
         redirectAttributes.addFlashAttribute("successInsuranceEdit", "Údaje změněny");
 
-        return "redirect:/insurance/list";
+
+        return "redirect:" + getRedirectUrl(request);
+    }
+
+    @PostMapping("/insurance/{insuranceId}/delete")
+   // @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
+    public String deleteInsurance (
+            @PathVariable(name = "insuranceId}") Long insuranceId,
+            HttpServletRequest request
+    ){
+        insuranceService.deleteInsurance(insuranceId);
+
+        return "redirect:" + getRedirectUrl(request);
     }
 
     @ExceptionHandler(InsuranceNotFoundException.class)
     public String handleInsuranceNotFoundException(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("insuranceNotFound", "Pojistná smlouva nenalezena.");
         return "redirect:/insurance/list";
+    }
+
+    private String getRedirectUrl(HttpServletRequest request){
+
+        if(request.isUserInRole("ROLE_CLIENT")){
+            return "/client/myDetail";
+        }
+        if (request.isUserInRole("ROLE_ADMIN")){
+            return "/client/list";
+        }
+        if(request.isUserInRole("ROLE_EMPLOYEE")){
+            return "/insurance/list";
+        }
+        return "/";
     }
 }

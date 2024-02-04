@@ -3,7 +3,7 @@ package project.models.dtos.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import project.data.entities.insurance.InsuranceEntity;
+import project.data.entities.InsuranceEntity;
 import project.models.dtos.InsuranceDTO;
 
 @Mapper(componentModel = "spring")

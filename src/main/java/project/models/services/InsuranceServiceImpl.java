@@ -2,7 +2,7 @@ package project.models.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.data.entities.insurance.InsuranceEntity;
+import project.data.entities.InsuranceEntity;
 import project.data.repositories.ClientRepository;
 import project.data.repositories.InsuranceRepository;
 import project.models.dtos.InsuranceDTO;
@@ -95,12 +95,11 @@ public class InsuranceServiceImpl implements InsuranceService {
      */
     @Override
     public void editInsurance(InsuranceDTO dto) {
-        System.out.println("\nInsuranceService.editInsurance volána:");
-        System.out.println("DTO: " + dto);
+
         InsuranceEntity fetchedEntity = insuranceRepository
                 .findById(dto.getId())
                 .orElseThrow(InsuranceNotFoundException::new);
-        System.out.println("Načtená entita: " + fetchedEntity);
+
         insuranceMapper.updateInsuranceEntity(dto, fetchedEntity);
         insuranceRepository.save(fetchedEntity);
 

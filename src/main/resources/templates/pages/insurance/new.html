@@ -30,7 +30,7 @@
                             <label for="insuranceType" class="form-label">Typ pojištění</label>
                             <select class="form-select" th:field="*{insuranceType}">
                                 <option value="">"Vyberte typ pojištění" </option>
-                                <option th:each="type: ${T(project.data.entities.insurance.InsuranceType).values()}"
+                                <option th:each="type: ${T(project.constant.InsuranceType).values()}"
                                         th:value="${type}"
                                         th:text="${type.description}"
                                         id="insuranceType"></option>

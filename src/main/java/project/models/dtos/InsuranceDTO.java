@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
-import project.data.entities.insurance.InsuranceType;
+import project.constant.InsuranceType;
 
 import java.time.LocalDate;
 

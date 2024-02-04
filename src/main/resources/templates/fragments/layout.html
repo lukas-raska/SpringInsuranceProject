@@ -14,8 +14,8 @@
 <body>
 
 <header th:fragment="header"
-        class="bg-dark-subtle  ">
-    <nav class="d-flex justify-content-between">
+        class=" fixed-top mb-4">
+    <nav class="d-flex justify-content-between bg-dark-subtle ">
         <ul class="nav nav-underline mx-4 align-items-center ">
             <li class="nav-item">
                 <a class="nav-link"
@@ -71,14 +71,7 @@
                 <a th:href="@{/client/register}"
                    class="nav-link ">Registrace</a>
             </li>
-            <li sec:authorize="hasRole('ADMIN')"
-                class="nav-item">
-                <a th:href="@{/employee/register}"
-                   class="nav-link ">Nový zaměstnanec</a>
-            </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
-
-
                 <form th:action="@{/logout}"
                       method="post">
                     <button type="submit"
@@ -90,7 +83,22 @@
             </li>
         </ul>
     </nav>
+
+    <!--flash messages -->
+    <div class="">
+        <div th:if="${successEdit}" th:text="${successEdit}" class=" text-center bg-success text-white "></div>
+        <div th:if="${successDelete}" th:text="${successDelete}" class=" text-center bg-success text-white "></div>
+        <div th:if="${newInsuranceCreated}" th:text="${newInsuranceCreated}"
+             class=" text-center bg-success text-white "></div>
+        <div th:if="${successInsuranceEdit}" th:text="${successInsuranceEdit}"
+             class=" text-center bg-success text-white "></div>
+    </div>
+
+
+    <!--flash messages -->
+
 </header>
+
 
 <footer th:fragment="footer"
         class=" bg-dark-subtle d-flex justify-content-center align-items-center fixed-bottom">

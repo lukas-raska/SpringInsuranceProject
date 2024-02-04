@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org" th:object="${clientDTO}">
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org" th:object="${clientDTO}"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head th:replace="~{fragments/layout.html :: head('Můj přehled: ' + *{firstName} + ' ' + *{lastName})}"></head>
 <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
@@ -10,8 +11,7 @@
 <header th:replace="~{fragments/layout.html :: header}"></header>
 
 <!--flash messages-->
-<div th:if="${newInsuranceCreated}" th:text="${newInsuranceCreated}" class=" text-center bg-success text-white ">
-</div>
+
 <!--flash messages-->
 
 <article class="container ">
@@ -95,16 +95,41 @@
             <thead>
             <tr>
                 <th>Druh pojištění</th>
-                <th>Poj. částka</th>
-                <th>Datum sjednání</th>
-                <th>tlačítka</th>
+                <th class="d-none d-sm-table-cell ">Poj. částka</th>
+                <th class="d-none d-md-table-cell ">Datum sjednání</th>
+                <th sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')"></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="insurance:${clientInsurances}">
-                <td th:text="${insurance.insuranceType.description}">Pojištění majetku</td>
-                <td th:text="${insurance.amountOfInsurance} + ' Kč'" >1000000</td>
-                <td th:text="${#temporals.format(insurance.dateOfRegistry, 'dd.MM.yyyy')}">1.1.24</td>
+                <td>
+                    <a th:href="@{'/insurance/' + ${insurance.id}}">
+                        <span th:text="${insurance.insuranceType.description}">Pojištění majetku</span>
+                    </a>
+
+                </td>
+                <td class="d-none d-sm-table-cell "
+                    th:text="${insurance.amountOfInsurance} + ' Kč'">1000000
+                </td>
+                <td class="d-none d-md-table-cell "
+                    th:text="${#temporals.format(insurance.dateOfRegistry, 'dd.MM.yyyy')}">1.1.24
+                </td>
+                <td >
+                    <div class="d-flex justify-content-center gap-md-2  " >
+                        <a class="btn btn-info "
+                        th:href="@{'/insurance/' + ${insurance.id} + '/edit'}"
+                     >Upravit
+                     </a>
+                     <form th:action="@{'/insurance/' + ${insurance.id} + '/delete'}"
+                           th:method="post">
+                         <button class="btn btn-danger" type="submit">Odstranit </button>
+                     </form>
+                    </div>
+                        
+                    
+                    
+
+                </td>
             </tr>
 
             </tbody>

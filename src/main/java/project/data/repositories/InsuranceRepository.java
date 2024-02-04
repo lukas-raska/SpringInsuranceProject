@@ -2,7 +2,7 @@ package project.data.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import project.data.entities.insurance.InsuranceEntity;
+import project.data.entities.InsuranceEntity;
 
 import java.util.List;
 import java.util.Optional;

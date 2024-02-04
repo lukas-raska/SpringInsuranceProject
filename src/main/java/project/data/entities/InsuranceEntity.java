@@ -1,8 +1,9 @@
-package project.data.entities.insurance;
+package project.data.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import project.constant.InsuranceType;
 import project.data.entities.ClientEntity;
 
 import java.time.LocalDate;
