@@ -2,139 +2,63 @@
 <html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/layout.html :: head('Přehled zaměstnanců')}"></head>
-<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css" />
-<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css" />
+<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
 
 <body>
 
-    <header th:replace="~{fragments/layout.html :: header}"></header>
+<header th:replace="~{fragments/layout.html :: header}"></header>
 
-    <header th:fragment="header" class=" fixed-top mb-4">
-        <nav class="d-flex justify-content-between bg-dark-subtle ">
-            <ul class="nav nav-underline mx-4 align-items-center ">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html" th:href="@{/}">
-                        <img src="/src/main/resources/static/images/logo_min.png" th:src="@{/images/logo_min.png}"
-                            alt="logo" id="logo" /></a>
-                </li>
-                <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')" class="nav-item">
-                    <a th:href="@{/client/list}" class="nav-link ">Přehled klientů</a>
-                </li>
-                <li sec:authorize="hasRole('ADMIN')" class="nav-item">
-                    <a th:href="@{/employee/list}" class="nav-link ">Přehled zaměstnanců</a>
-                </li>
-                <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')" class="nav-item">
-                    <a th:href="@{/insurance/list}" class="nav-link ">Přehled pojistných smluv</a>
-                </li>
-                <li sec:authorize="hasRole('CLIENT')" class="nav-item">
-                    <a th:href="@{/client/myDetail}" class="nav-link ">Můj přehled</a>
-                </li>
-                <li sec:authorize="hasRole('EMPLOYEE')" class="nav-item">
-                    <a th:href="@{/employee/myDetail}" class="nav-link ">Můj přehled</a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/about}" class="nav-link ">O aplikaci</a>
-                </li>
-            </ul>
-
-
-            <ul class="nav nav-underline mx-4 align-items-center ">
-                <li class="nav-item" th:text="${loggedInUser}">
-                </li>
-                <li sec:authorize="isAnonymous()" class="nav-item">
-                    <a th:href="@{/login}" class="nav-link ">Přihlášení</a>
-                </li>
-                <li sec:authorize="isAnonymous()" class="nav-item">
-                    <a th:href="@{/client/register}" class="nav-link ">Registrace</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="nav-link">
-                            Odhlásit se
-                        </button>
-                    </form>
-
-                </li>
-            </ul>
-        </nav>
-
-        <!--flash messages -->
-        <div class="">
-            <div th:if="${successEdit}" th:text="${successEdit}" class=" text-center bg-success text-white "></div>
-            <div th:if="${successDelete}" th:text="${successDelete}" class=" text-center bg-success text-white "></div>
-            <div th:if="${newInsuranceCreated}" th:text="${newInsuranceCreated}"
-                class=" text-center bg-success text-white "></div>
-            <div th:if="${successInsuranceEdit}" th:text="${successInsuranceEdit}"
-                class=" text-center bg-success text-white "></div>
-            <div th:if="${successRegister}" th:text="${successRegister}" class=" text-center bg-success text-white ">
-            </div>
-
-            <div th:if="${clientNotFound}" th:text="${clientNotFound}" class=" text-center bg-danger text-white "></div>
-
+<article class="container ">
+    <header class="d-flex justify-content-between    ">
+        <h1 class="align-self-center "> Přehled zaměstnanců </h1>
+        <div class="align-self-center">
+            <a th:href="@{/employee/register}" class="btn btn-lg btn-outline-primary align-self-center ">
+                Nový zaměstnanec
+            </a>
         </div>
-
-
-        <!--flash messages -->
-
     </header>
 
+    <section>
+        <table class="table table-hover align-middle ">
+            <thead>
+            <tr>
+                <th>Jméno</th>
+                <th class="d-none d-md-table-cell  ">E-mail</th>
+                <th class="d-none d-sm-table-cell   ">Telefon</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="employee : ${allEmployeesList}">
+                <td>
+                    <a th:href="@{'/employee/' + ${employee.id}}">
+                        <span th:text="${employee.firstName} + ' ' + ${employee.lastName}"></span>
+                    </a>
+                </td>
+                <td th:text="${employee.email}" class="d-none d-md-table-cell ">Praha
+                </td>
+                <td th:text="${employee.phoneNumber}" class="d-sm-table-cell ">30
 
+                </td>
+                <td class="text-end ">
+                    <div class="d-flex justify-content-center gap-md-2 " sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{'/employee/edit/' + ${employee.id}}"
+                           class="btn btn-outline-info     ">Upravit</a>
+                        <form th:action="@{'/employee/delete/' + ${employee.id}}" th:method="post">
+                            <button class="btn btn-outline-danger" type="submit">
+                                Smazat
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</article>
 
-    <!--flash messages-->
-
-    <!--flash messages-->
-
-    <article class="container ">
-        <header class="d-flex justify-content-between    ">
-            <h1 class="align-self-center "> Přehled zaměstnanců </h1>
-            <div class="align-self-center">
-                <a th:href="@{/employee/register}" class="btn btn-lg btn-outline-primary align-self-center ">
-                    Nový zaměstnanec
-                </a>
-            </div>
-
-        </header>
-
-        <section>
-            <table class="table table-hover align-middle ">
-                <thead>
-                    <tr>
-                        <th>Jméno</th>
-                        <th class="d-none d-md-table-cell  ">E-mail</th>
-                        <th class="d-none d-sm-table-cell   ">Telefon</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="employee : ${allEmployeesList}">
-                        <td>
-                            <a th:href="@{'/employee/' + ${employee.id}}">
-                                <span th:text="${employee.firstName} + ' ' + ${employee.lastName}"></span>
-                            </a>
-                        </td>
-                        <td th:text="${employee.email}" class="d-none d-md-table-cell ">Praha
-                        </td>
-                        <td th:text="${employee.phoneNumber}" class="d-sm-table-cell ">30
-
-                        </td>
-                        <td class="text-end ">
-                            <div class="d-flex justify-content-center gap-md-2 " sec:authorize="hasRole('ADMIN')">
-                                <a th:href="@{'/employee/edit/' + ${employee.id}}"
-                                    class="btn btn-outline-info     ">Upravit</a>
-                                <form th:action="@{'/employee/delete/' + ${employee.id}}" th:method="post">
-                                    <button class="btn btn-outline-danger" type="submit">
-                                        Smazat
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-    </article>
-
-    <footer th:replace="~{fragments/layout.html :: footer}"></footer>
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
 
 </body>
 

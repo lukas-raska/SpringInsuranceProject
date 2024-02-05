@@ -2,82 +2,12 @@
 <html lang="cs-cz" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/layout.html :: head('Registrace')}"></head>
-    <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
-    <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
 
 <body>
 
 <header th:replace="~{fragments/layout.html :: header}"></header>
-
-
-<header th:fragment="header" class=" fixed-top mb-4">
-    <nav class="d-flex justify-content-between bg-dark-subtle ">
-        <ul class="nav nav-underline mx-4 align-items-center ">
-            <li class="nav-item">
-                <a class="nav-link" href="index.html" th:href="@{/}">
-                    <img src="/src/main/resources/static/images/logo_min.png" th:src="@{/images/logo_min.png}"
-                        alt="logo" id="logo" /></a>
-            </li>
-            <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')" class="nav-item">
-                <a th:href="@{/client/list}" class="nav-link ">Přehled klientů</a>
-            </li>
-            <li sec:authorize="hasRole('ADMIN')" class="nav-item">
-                <a th:href="@{/employee/list}" class="nav-link ">Přehled zaměstnanců</a>
-            </li>
-            <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')" class="nav-item">
-                <a th:href="@{/insurance/list}" class="nav-link ">Přehled pojistných smluv</a>
-            </li>
-            <li sec:authorize="hasRole('CLIENT')" class="nav-item">
-                <a th:href="@{/client/myDetail}" class="nav-link ">Můj přehled</a>
-            </li>
-            <li sec:authorize="hasRole('EMPLOYEE')" class="nav-item">
-                <a th:href="@{/employee/myDetail}" class="nav-link ">Můj přehled</a>
-            </li>
-            <li class="nav-item">
-                <a th:href="@{/about}" class="nav-link ">O aplikaci</a>
-            </li>
-        </ul>
-
-
-        <ul class="nav nav-underline mx-4 align-items-center ">
-            <li class="nav-item" th:text="${loggedInUser}">
-            </li>
-            <li sec:authorize="isAnonymous()" class="nav-item">
-                <a th:href="@{/login}" class="nav-link ">Přihlášení</a>
-            </li>
-            <li sec:authorize="isAnonymous()" class="nav-item">
-                <a th:href="@{/client/register}" class="nav-link ">Registrace</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <form th:action="@{/logout}" method="post">
-                    <button type="submit" class="nav-link">
-                        Odhlásit se
-                    </button>
-                </form>
-
-            </li>
-        </ul>
-    </nav>
-
-    <!--flash messages -->
-    <div class="">
-        <div th:if="${successEdit}" th:text="${successEdit}" class=" text-center bg-success text-white "></div>
-        <div th:if="${successDelete}" th:text="${successDelete}" class=" text-center bg-success text-white "></div>
-        <div th:if="${newInsuranceCreated}" th:text="${newInsuranceCreated}"
-            class=" text-center bg-success text-white "></div>
-        <div th:if="${successInsuranceEdit}" th:text="${successInsuranceEdit}"
-            class=" text-center bg-success text-white "></div>
-        <div th:if="${successRegister}" th:text="${successRegister}" class=" text-center bg-success text-white ">
-        </div>
-        
-        <div th:if="${clientNotFound}" th:text="${clientNotFound}" class=" text-center bg-danger text-white "></div>
-        <div th:if="${employeeNotFound}" th:text="${employeeNotFound}" class=" text-center bg-danger text-white "></div>
-    </div>
-
-
-    <!--flash messages -->
-
-</header>
 
 
 <article class="container mb-5">
@@ -85,122 +15,8 @@
         <header class="text-center row ">
             <h1>Registrace nového klienta</h1>
         </header>
-
-
-
-
-        <section class="row">
-            <form class=" border bg-dark-subtle offset-md-1 col-md-10"
-                  th:action="@{/client/register}"
-                  th:object="${userRegisterDTO}"
-                  method="post">
-
-                <!--přihlašovací údaje-->
-                <div class="container my-4 pb-4 border border-secondary rounded-4  ">
-                    <h6 class="text-center mt-2">Přihlašovací údaje</h6>
-                    <div class="row">
-                        <div class="col-12">
-                            <label for="email" class="form-label">Email</label>
-                            <input th:field="*{email}" type="email" class="form-control" name="email" id="email"/>
-                            <small th:errors="*{email}" class="form-text text-danger "></small>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="password" class="form-label">Heslo</label>
-                            <input th:field="*{password}" type="password" class="form-control" name="password"
-                                   id="password"/>
-                            <small th:errors="*{password}" class="form-text text-danger "></small>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="confirmPassword" class="form-label">Zopakování hesla</label>
-                            <input th:field="*{confirmPassword}" type="password" class="form-control"
-                                   name="confirmPassword" id="confirmPassword"/>
-                            <small th:errors="*{confirmPassword}" class="form-text text-danger "></small>
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <!--osobní údaje-->
-                <div class="container my-4 pb-3 border border-secondary  rounded-4  ">
-                    <h6 class="text-center mt-2">Osobní údaje</h6>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="firstName" class="form-label">Jméno</label>
-                            <input th:field="*{firstName}" type="text" class="form-control" name="firstName"
-                                   id="firstName"/>
-                            <small th:errors="*{firstName}" class="form-text text-danger "></small>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="lastName" class="form-label">Příjmení</label>
-                            <input th:field="*{lastName}" type="text" class="form-control" name="lastName"
-                                   id="lastName"/>
-                            <small th:errors="*{lastName}" class="form-text text-danger "></small>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="phoneNumber" class="form-label">Telefon</label>
-                            <input th:field="*{phoneNumber}" type="text" class="form-control" name="phoneNumber"
-                                   id="phoneNumber"/>
-                            <small th:errors="*{phoneNumber}" class="form-text text-danger "></small>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="dateOfBirth" class="form-label">Datum narození</label>
-                            <input th:field="*{dateOfBirth}" type="date" class="form-control"
-                                   name="dateOfBirth" id="dateOfBirth"/>
-                            <small th:errors="*{dateOfBirth}" class="form-text text-danger "></small>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!--adresa-->
-                <div class="container my-4 pb-3 border border-secondary rounded-4  ">
-                    <h6 class="text-center mt-2">Bydliště</h6>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="street" class="form-label">Ulice</label>
-                            <input th:field="*{street}" type="text" class="form-control" name="street" id="street"/>
-                            <small th:errors="*{street}" class="form-text text-danger "></small>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="streetNumber" class="form-label">Číslo popisné/orientační</label>
-                            <input th:field="*{streetNumber}" type="text" class="form-control" name="streetNumber"
-                                   id="streetNumber"/>
-                            <small th:errors="*{streetNumber}" class="form-text text-danger "></small>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="city" class="form-label">Město</label>
-                            <input th:field="*{city}" type="text" class="form-control" name="city"
-                                   id="city"/>
-                            <small th:errors="*{city}" class="form-text text-danger "></small>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="zipCode" class="form-label">PSČ</label>
-                            <input th:field="*{zipCode}" type="text" class="form-control"
-                                   name="zipCode" id="zipCode"/>
-                            <small th:errors="*{zipCode}" class="form-text text-danger "></small>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="m-3 text-center ">
-                    <button type="submit" class="btn btn-lg btn-outline-success      ">
-                        Registrovat
-                    </button>
-                </div>
-            </form>
-
-            <div class="my-3"></div>
-
+        <section>
+            <form th:replace="~{fragments/registerForm.html :: registerForm(action = '/client/register')}"></form>
         </section>
     </div>
 </article>

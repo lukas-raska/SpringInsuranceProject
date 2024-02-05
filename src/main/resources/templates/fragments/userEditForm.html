@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/styles/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/styles/styles.css}" type="text/css"/>
+</head>
+
+<body>
+
+<form th:fragment="userEditForm(action)"
+        class=" border bg-dark-subtle"
+      th:action="@{${action} + *{id}}"
+      th:object="${userEditDTO}"
+      th:method="post">
+
+    <!--osobní údaje-->
+    <div class="container my-4 pb-3 border border-secondary  rounded-4  ">
+        <h6 class="text-center mt-2">Osobní údaje</h6>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="firstName" class="form-label">Jméno</label>
+                <input th:field="*{firstName}" type="text" class="form-control" name="firstName"
+                       id="firstName"/>
+                <small th:errors="*{firstName}" class="form-text text-danger "></small>
+            </div>
+            <div class="col-md-6">
+                <label for="lastName" class="form-label">Příjmení</label>
+                <input th:field="*{lastName}" type="text" class="form-control" name="lastName"
+                       id="lastName"/>
+                <small th:errors="*{lastName}" class="form-text text-danger "></small>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="phoneNumber" class="form-label">Telefon</label>
+                <input th:field="*{phoneNumber}" type="text" class="form-control" name="phoneNumber"
+                       id="phoneNumber"/>
+                <small th:errors="*{phoneNumber}" class="form-text text-danger "></small>
+            </div>
+            <div class="col-md-6">
+                <label for="dateOfBirth" class="form-label">Datum narození</label>
+                <input th:field="*{dateOfBirth}" type="date" class="form-control"
+                       name="dateOfBirth" id="dateOfBirth"/>
+                <small th:errors="*{dateOfBirth}" class="form-text text-danger "></small>
+            </div>
+        </div>
+    </div>
+
+
+    <!--adresa-->
+    <div class="container my-4 pb-3 border border-secondary rounded-4  ">
+        <h6 class="text-center mt-2">Bydliště</h6>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="street" class="form-label">Ulice</label>
+                <input th:field="*{street}" type="text" class="form-control" name="street" id="street"/>
+                <small th:errors="*{street}" class="form-text text-danger "></small>
+            </div>
+            <div class="col-md-6">
+                <label for="streetNumber" class="form-label">Číslo popisné/orientační</label>
+                <input th:field="*{streetNumber}" type="text" class="form-control" name="streetNumber"
+                       id="streetNumber"/>
+                <small th:errors="*{streetNumber}" class="form-text text-danger "></small>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="city" class="form-label">Město</label>
+                <input th:field="*{city}" type="text" class="form-control" name="city"
+                       id="city"/>
+                <small th:errors="*{city}" class="form-text text-danger "></small>
+            </div>
+            <div class="col-md-6">
+                <label for="zipCode" class="form-label">PSČ</label>
+                <input th:field="*{zipCode}" type="text" class="form-control"
+                       name="zipCode" id="zipCode"/>
+                <small th:errors="*{zipCode}" class="form-text text-danger "></small>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="m-3 text-center ">
+        <button type="submit" class="btn btn-lg      btn-outline-success      ">
+            Uložit
+        </button>
+    </div>
+</form>
+
+</body>
+
+</html>
