@@ -1,6 +1,6 @@
 <h1>SpringBoot Insurance Project</h1>
 
-<p>Tento projekt je mou první webovou aplikací tvořenou v <strong>Javě</strong> a <strong>Spring Boot</strong>. Jedná se o cvičnou aplikaci k osvojení základních principů tvorby webových aplikací dle MVC architektury.</p>
+<p>Tento projekt je mou první webovou aplikací tvořenou v <strong>Javě</strong> a <strong>Spring Boot</strong>. Jedná se o cvičnou aplikaci k osvojení základních principů Spring Bootu a  MVC architektury.</p>
 
 <h4>Co moje aplikace umí:</h4>
 <ul>
@@ -16,6 +16,7 @@
 <li>k validaci vstupních dat použito <strong><a href="https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html">Java Bean Validation</a></strong></li>
 <li>k zobrazení dat v HTML použit šablonovací systém <strong><a href="https://www.thymeleaf.org/">Thymeleaf</a></strong> </li>
 <li>k řešení bezpečnosti a nastavování uživatelských oprávnění použito <strong><a href="https://spring.io/projects/spring-security">Spring Security</a></strong> a <strong><a href="https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6"> Thymeleaf extras Spring Security 6</a></strong></li>
+  <li>ke stylování použit framework <strong><a href=https://getbootstrap.com/>Bootstrap</a></strong></li>
 </ul>
 
 <h4>Jak aplikaci spustit:</h4>
