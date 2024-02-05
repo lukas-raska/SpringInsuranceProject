@@ -131,7 +131,7 @@ public class InsuranceController {
     }
 
     @PostMapping("/insurance/{insuranceId}/edit")
-  //  @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public String editInsurance(
             @PathVariable(name = "insuranceId") Long insuranceId,
             @Valid @ModelAttribute InsuranceDTO dto,
@@ -155,11 +155,12 @@ public class InsuranceController {
     }
 
     @PostMapping("/insurance/{insuranceId}/delete")
-   // @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     public String deleteInsurance (
-            @PathVariable(name = "insuranceId}") Long insuranceId,
+            @PathVariable(name = "insuranceId") Long insuranceId,
             HttpServletRequest request
     ){
+
         insuranceService.deleteInsurance(insuranceId);
 
         return "redirect:" + getRedirectUrl(request);

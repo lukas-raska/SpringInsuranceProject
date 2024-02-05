@@ -1,6 +1,7 @@
 package project.controllers;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.constant.UserRole;
 import project.data.entities.ClientEntity;
 import project.models.dtos.InsuranceDTO;
 import project.models.dtos.UserDisplayDTO;
@@ -71,7 +73,8 @@ public class ClientController {
             @Valid @ModelAttribute UserRegisterDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes,
-            Model model
+            Model model,
+            HttpServletRequest request
     ) {
         //pokud existují validační chyby, vykreslí se opětovně formulář s validačními hláškami
         if (result.hasErrors()) {
@@ -97,6 +100,12 @@ public class ClientController {
         //po úspěšné registraci přesměrování na přihlášení a zobrazení flash zprávy
         redirectAttributes.addFlashAttribute("successRegister", "Uživatel zaregistrován");
 
+        //pokud vytváření nového klienta vytváří přihlášený zaměstnanec nebo admin
+        if (authenticationService.isUserLoggedIn()
+                && request.isUserInRole(UserRole.ROLE_ADMIN.toString()) ||request.isUserInRole(UserRole.ROLE_EMPLOYEE.toString())){
+            return "redirect:/client/list";
+        }
+        //pokud se registruje klient
         return "redirect:/login";
     }
 

@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
 </head>
 
+
 <body>
 
 <header th:replace="~{fragments/layout.html :: header}"></header>
@@ -13,10 +14,16 @@
 
 <article class="text-center">
     <header class="my-5">
-        <h1>O aplikaci</h1>
+        <h1 class="mt-4">O aplikaci</h1>
     </header>
-    <section>
-        <p>Zde bude popsáno, co všechno aplikace umí a jaké nástroje byly při její tvorbě použity.</p>
+    <section class="container ">
+        <div class="offset-md-2 col-8 text-start  ">
+            <p>Jedná se o fiktivní aplikaci nabízející správu pojištěných osob a jejich pojištění. Jde o projekt, který sloužil k naučení základních principů <strong>Spring Boot</strong> a <strong>MVC architektury</strong></p>
+            <p>Nabízí pomocí <strong>Spring security</strong> možnost přihlášení přes dvě uživatelské entity: "klient" a "zaměstnanec", s nastavenými odlišnými právy pro správu uložených záznamů.</p>
+        <p>Ke každé entitě umožněny základní <strong>CRUD operace</strong> (vytvoření, zobrazení, editace, mazání)</p>
+        <p>K zobrazení v HTML použit šablonovací systém <strong>Thymeleaf</strong>, ke stylování použit framework <strong>Bootstrap</strong></p>
+        </div>
+       
     </section>
 </article>
 

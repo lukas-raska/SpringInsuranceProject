@@ -2,88 +2,161 @@
 <html lang="cs-cz" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head th:replace="~{fragments/layout.html :: head('Detail pojistné smlouvy')}"></head>
-<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
-<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css" />
 
 <body>
 
-<header th:replace="~{fragments/layout.html :: header}"></header>
+    <header th:replace="~{fragments/layout.html :: header}"></header>
 
-<article class="container " th:object="${insuranceDetail}">
 
-    <header class=" text-center row ">
-        <h1 class="mt-4">Detail pojistné smlouvy č. <span th:text="*{id}">1</span></h1>
+
+    <header th:fragment="header" class=" fixed-top mb-4">
+        <nav class="d-flex justify-content-between bg-dark-subtle ">
+            <ul class="nav nav-underline mx-4 align-items-center ">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" th:href="@{/}">
+                        <img src="/src/main/resources/static/images/logo_min.png" th:src="@{/images/logo_min.png}"
+                            alt="logo" id="logo" /></a>
+                </li>
+                <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')" class="nav-item">
+                    <a th:href="@{/client/list}" class="nav-link ">Přehled klientů</a>
+                </li>
+                <li sec:authorize="hasRole('ADMIN')" class="nav-item">
+                    <a th:href="@{/employee/list}" class="nav-link ">Přehled zaměstnanců</a>
+                </li>
+                <li sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')" class="nav-item">
+                    <a th:href="@{/insurance/list}" class="nav-link ">Přehled pojistných smluv</a>
+                </li>
+                <li sec:authorize="hasRole('CLIENT')" class="nav-item">
+                    <a th:href="@{/client/myDetail}" class="nav-link ">Můj přehled</a>
+                </li>
+                <li sec:authorize="hasRole('EMPLOYEE')" class="nav-item">
+                    <a th:href="@{/employee/myDetail}" class="nav-link ">Můj přehled</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/about}" class="nav-link ">O aplikaci</a>
+                </li>
+            </ul>
+
+
+            <ul class="nav nav-underline mx-4 align-items-center ">
+                <li class="nav-item" th:text="${loggedInUser}">
+                </li>
+                <li sec:authorize="isAnonymous()" class="nav-item">
+                    <a th:href="@{/login}" class="nav-link ">Přihlášení</a>
+                </li>
+                <li sec:authorize="isAnonymous()" class="nav-item">
+                    <a th:href="@{/client/register}" class="nav-link ">Registrace</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="nav-link">
+                            Odhlásit se
+                        </button>
+                    </form>
+
+                </li>
+            </ul>
+        </nav>
+
+        <!--flash messages -->
+        <div class="">
+            <div th:if="${successEdit}" th:text="${successEdit}" class=" text-center bg-success text-white "></div>
+            <div th:if="${successDelete}" th:text="${successDelete}" class=" text-center bg-success text-white "></div>
+            <div th:if="${newInsuranceCreated}" th:text="${newInsuranceCreated}"
+                class=" text-center bg-success text-white "></div>
+            <div th:if="${successInsuranceEdit}" th:text="${successInsuranceEdit}"
+                class=" text-center bg-success text-white "></div>
+            <div th:if="${successRegister}" th:text="${successRegister}" class=" text-center bg-success text-white ">
+            </div>
+
+            <div th:if="${clientNotFound}" th:text="${clientNotFound}" class=" text-center bg-danger text-white "></div>
+            <div th:if="${employeeNotFound}" th:text="${employeeNotFound}" class=" text-center bg-danger text-white ">
+            </div>
+        </div>
+
+
+        <!--flash messages -->
+
     </header>
 
-    <!--Start sekce - klient-->
-    <section class="container bg-dark-subtle mt-4">
-        <div class="row py-2">
-            <div class="ms-5">
-                <h6>Klient: </h6>
-                <a sec:authorize="hasRole('CLIENT')"
-                        th:href="@{/client/myDetail}">
-                    <p>
-                        <span  th:text="*{insuredClient.firstName}"></span>
-                        <span  th:text="*{insuredClient.lastName}"></span>
-                    </p>
-                </a>
-                <a sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')"
-                   th:href="@{'/client/' + *{insuredClient.id}}">
-                    <p>
-                        <span  th:text="*{insuredClient.firstName}"></span>
-                        <span  th:text="*{insuredClient.lastName}"></span>
-                    </p>
-                </a>
-            </div>
-        </div>
-    </section>
-    <!--konec sekce - klient-->
 
-    <!--Start sekce - údaje smlouvy-->
-    <section class="container bg-dark-subtle mt-4">
-        <div class="row py-2">
-            <div class="col-sm-6 ">
+    <article class="container " th:object="${insuranceDetail}">
+
+        <header class=" text-center row ">
+            <h1>Detail pojistné smlouvy č. <span th:text="*{id}">1</span></h1>
+        </header>
+
+        <!--Start sekce - klient-->
+        <section class="container bg-dark-subtle mt-4">
+            <div class="row py-2">
                 <div class="ms-5">
-                    <p>Druh pojištění: <span th:text="*{insuranceType.description}"></span></p>
-                    <p>Pojistná částka: <span th:text="*{amountOfInsurance} + ' Kč'"></span></p>
-                    <p>Datum vytvoření:
-                        <span th:text="${#temporals.format(insuranceDetail.dateOfRegistry, 'dd.MM.yyyy')}"></span></p>
+                    <h6>Klient: </h6>
+                    <a sec:authorize="hasRole('CLIENT')" th:href="@{/client/myDetail}">
+                        <p>
+                            <span th:text="*{insuredClient.firstName}"></span>
+                            <span th:text="*{insuredClient.lastName}"></span>
+                        </p>
+                    </a>
+                    <a sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')" th:href="@{'/client/' + *{insuredClient.id}}">
+                        <p>
+                            <span th:text="*{insuredClient.firstName}"></span>
+                            <span th:text="*{insuredClient.lastName}"></span>
+                        </p>
+                    </a>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="ms-5">
-                    <p>Počátek pojištění:
-                        <span th:text="${#temporals.format(insuranceDetail.insuranceStart, 'dd.MM.yyyy')}"></span>
-                    </p>
-                    <p>Konec pojištění:
-                        <span th:text="${#temporals.format(insuranceDetail.insuranceEnd, 'dd.MM.yyyy')}"></span></p>
+        </section>
+        <!--konec sekce - klient-->
+
+        <!--Start sekce - údaje smlouvy-->
+        <section class="container bg-dark-subtle mt-4">
+            <div class="row py-2">
+                <div class="col-sm-6 ">
+                    <div class="ms-5">
+                        <p>Druh pojištění: <span th:text="*{insuranceType.description}"></span></p>
+                        <p>Pojistná částka: <span th:text="*{amountOfInsurance} + ' Kč'"></span></p>
+                        <p>Datum vytvoření:
+                            <span th:text="${#temporals.format(insuranceDetail.dateOfRegistry, 'dd.MM.yyyy')}"></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="ms-5">
+                        <p>Počátek pojištění:
+                            <span th:text="${#temporals.format(insuranceDetail.insuranceStart, 'dd.MM.yyyy')}"></span>
+                        </p>
+                        <p>Konec pojištění:
+                            <span th:text="${#temporals.format(insuranceDetail.insuranceEnd, 'dd.MM.yyyy')}"></span>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!--konec sekce - osobní údaje-->
+        </section>
+        <!--konec sekce - osobní údaje-->
 
 
-    <div class="container border my-2">
-        <div class="row d-flex justify-content-between  ">
-            <div class="col-sm text-center">
-                <a th:href="@{'/insurance/' + *{id} + '/edit'}" class="btn btn-outline-info col  m-2">Pozměnit
-                    údaje</a>
+        <div class="container my-2" sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')">
+            <div class="row d-flex justify-content-between  ">
+                <div class="col-sm text-center">
+                    <a th:href="@{'/insurance/' + *{id} + '/edit'}" class="btn btn-outline-info col  m-2">Pozměnit
+                        údaje</a>
+                </div>
+                <div class="col-sm text-center ">
+                    <a class="btn btn-outline-danger  m-2 ">Zrušit smlouvu</a>
+                </div>
+
             </div>
-            <div class="col-sm text-center ">
-                <a class="btn btn-outline-danger  m-2 ">Zrušit smlouvu</a>
-            </div>
-
         </div>
-    </div>
 
 
-    <p class="my-5"></p>
+        <p class="my-5"></p>
 
 
-</article>
+    </article>
 
-<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+    <footer th:replace="~{fragments/layout.html :: footer}"></footer>
 
 </body>
 

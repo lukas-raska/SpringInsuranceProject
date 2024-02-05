@@ -1,144 +1,132 @@
 <!DOCTYPE html>
 <html lang="cs-cz" xmlns:th="http://www.thymeleaf.org" th:object="${clientDTO}"
-      xmlns:sec="http://www.w3.org/1999/xhtml">
+    xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<head th:replace="~{fragments/layout.html :: head('Můj přehled: ' + *{firstName} + ' ' + *{lastName})}"></head>
-<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css"/>
-<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css"/>
+<head th:replace="~{fragments/layout.html :: head('Klient: ' + *{firstName} + ' ' + *{lastName})}"></head>
+<link rel="stylesheet" href="/src/main/resources/static/styles/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="/src/main/resources/static/styles/styles.css" type="text/css" />
+
+
+
+
+
 
 <body>
 
-<header th:replace="~{fragments/layout.html :: header}"></header>
+    <header th:replace="~{fragments/layout.html :: header}"></header>
 
-<!--flash messages-->
 
-<!--flash messages-->
+    <article class="container ">
 
-<article class="container ">
-
-    <!--Start sekce - osobní údaje-->
-    <section class="container bg-dark-subtle mt-4">
-        <div class="row  ">
-            <div class="mx-5 my-3">
-                <h3 class="col-12">
-                    <span th:text="*{firstName}">Lukas </span>
-                    <span th:text="*{lastName}">Raška</span>
-                </h3>
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="ms-5">
-                    <p>
-                        <span th:text="*{street}">Ulice </span>
-                        <span th:text="*{streetNumber}">1</span>
-                    </p>
-                    <p th:text="*{zipCode}">19000</p>
-                    <p th:text="*{city}">Praha</p>
+        <!--START SEKCE - OSOBNÍ ÚDAJE-->
+        <section class="container bg-dark-subtle mt-4">
+            <div class="row  ">
+                <div class="mx-5 my-3">
+                    <h3 class="col-12">
+                        <span th:text="*{firstName}">Lukas </span>
+                        <span th:text="*{lastName}">Raška</span>
+                    </h3>
                 </div>
-            </div>
-
-            <div class="col-sm-6">
-                <div class="ms-5">
-                    <p th:text="*{phoneNumber}">123456789</p>
-                    <p th:text="*{email}">lukas@lukas.cz</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--konec sekce - osobní údaje-->
-
-
-    <!--začátek sekce - tlačítka-->
-    <div class="container border my-2">
-        <div class="row d-flex justify-content-between  ">
-            <div class="col-sm text-center">
-                <a th:href="@{'/client/edit/' + *{id}}" class="btn btn-outline-info col  m-2">Změnit osobní
-                    údaje</a>
-            </div>
-            <div class="col-sm text-center ">
-                <form th:action="@{'/client/delete/' + *{id}}"
-                      th:method="post">
-                    <button class="btn btn-outline-danger"
-                            type="submit">
-                        Smazat účet
-                    </button>
-                </form>
 
             </div>
-            <div class="col-sm text-center">
-                <a class="btn btn-outline-danger  m-2     ">Změnit heslo</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="container border my-2">
-        <div class="row d-flex justify-content-between  ">
-            <div class="col-sm text-center">
-                <a th:href="@{'/client/' + *{id} + '/insurance/new'}" class="btn btn-outline-primary  col  m-2">
-                    Přidat nové pojištění
-                </a>
-            </div>
-        </div>
-    </div>
-    <!--konec sekce - tlačítka-->
-
-    <p class="my-5"></p>
-
-    <!--start sekce -  pojištění-->
-    <section>
-        <header>
-            <h2>Sjednaná pojištění</h2>
-        </header>
-        <table class="table table-hover mb-5">
-            <thead>
-            <tr>
-                <th>Druh pojištění</th>
-                <th class="d-none d-sm-table-cell ">Poj. částka</th>
-                <th class="d-none d-md-table-cell ">Datum sjednání</th>
-                <th sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="insurance:${clientInsurances}">
-                <td>
-                    <a th:href="@{'/insurance/' + ${insurance.id}}">
-                        <span th:text="${insurance.insuranceType.description}">Pojištění majetku</span>
-                    </a>
-
-                </td>
-                <td class="d-none d-sm-table-cell "
-                    th:text="${insurance.amountOfInsurance} + ' Kč'">1000000
-                </td>
-                <td class="d-none d-md-table-cell "
-                    th:text="${#temporals.format(insurance.dateOfRegistry, 'dd.MM.yyyy')}">1.1.24
-                </td>
-                <td >
-                    <div class="d-flex justify-content-center gap-md-2  " >
-                        <a class="btn btn-info "
-                        th:href="@{'/insurance/' + ${insurance.id} + '/edit'}"
-                     >Upravit
-                     </a>
-                     <form th:action="@{'/insurance/' + ${insurance.id} + '/delete'}"
-                           th:method="post">
-                         <button class="btn btn-danger" type="submit">Odstranit </button>
-                     </form>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="ms-5">
+                        <p>
+                            <span th:text="*{street}">Ulice </span>
+                            <span th:text="*{streetNumber}">1</span>
+                        </p>
+                        <p th:text="*{zipCode}">19000</p>
+                        <p th:text="*{city}">Praha</p>
                     </div>
-                        
-                    
-                    
+                </div>
 
-                </td>
-            </tr>
+                <div class="col-sm-6">
+                    <div class="ms-5">
+                        <p th:text="*{phoneNumber}">123456789</p>
+                        <p th:text="*{email}">lukas@lukas.cz</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--KONEC SEKCE - OSOBNÍ ÚDAJE-->
 
-            </tbody>
-        </table>
-    </section>
-    <!--konec sekce -  pojištění-->
-</article>
 
-<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+        <!--START SEKCE - TLAČÍTKA-->
+        <div class="container  my-2">
+            <div class="row d-flex justify-content-between  ">
+                <div class="col-sm text-center">
+                    <a th:href="@{'/client/edit/' + *{id}}" class="btn btn-outline-info col  m-2">
+                        Změnit osobní údaje
+                    </a>
+                </div>
+                <div class="col-sm text-center align-self-center ">
+                    <form sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')" th:action="@{'/client/delete/' + *{id}}"
+                        th:method="post">
+                        <button class="btn btn-outline-danger" type="submit"> Smazat účet
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+         <!--KONEC SEKCE - TLAČÍTKA-->
+
+        <p class="my-5"></p>
+
+         <!--START SEKCE - POJIŠTĚNÍ-->
+        <section class="container ">
+            <header class="d-flex justify-content-between">
+                <h2 class="align-self-center ">Sjednaná pojištění</h2>
+                <div class="align-self-center " >
+                    <a th:href="@{'/client/' + *{id} + '/insurance/new'}" class="btn btn-lg btn-outline-primary ">
+                        Přidat nové pojištění
+                    </a>
+                </div>
+            </header>
+            <table class="table table-hover mb-5">
+                <thead>
+                    <tr>
+                        <th>Druh pojištění</th>
+                        <th class="d-none d-sm-table-cell ">Pojistná částka [Kč]</th>
+                        <th class="d-none d-md-table-cell ">Datum sjednání</th>
+                        <th sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="insurance:${clientInsurances}">
+                        <td>
+                            <a th:href="@{'/insurance/' + ${insurance.id}}">
+                                <span th:text="${insurance.insuranceType.description}">Pojištění majetku</span>
+                            </a>
+
+                        </td>
+                        <td class="d-none d-sm-table-cell " th:text="${insurance.amountOfInsurance} + ' Kč'">1000000
+                        </td>
+                        <td class="d-none d-md-table-cell "
+                            th:text="${#temporals.format(insurance.dateOfRegistry, 'dd.MM.yyyy')}">1.1.24
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-md-2  "
+                                sec:authorize="hasAnyRole('ADMIN','EMPLOYEE')">
+                                <a class="btn btn-outline-info " th:href="@{'/insurance/' + ${insurance.id} + '/edit'}">Upravit
+                                </a>
+                                <form th:action="@{'/insurance/' + ${insurance.id} + '/delete'}" th:method="post">
+                                    <button class="btn btn-outline-danger" type="submit">Odstranit</button>
+                                </form>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </section>
+         <!--KONEC SEKCE - POJIŠTĚNÍ-->
+
+    </article>
+
+    <footer th:replace="~{fragments/layout.html :: footer}"></footer>
 
 </body>
 
